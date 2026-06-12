@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Joy Zhou | Professor</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --accent: #f97316;
+      --background: #f5f8ff;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --shadow: rgba(30, 58, 138, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(30, 58, 138, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.18), transparent 34%),
+        var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: min(900px, 100%);
+      background: var(--card);
+      border-radius: 28px;
+      padding: clamp(28px, 5vw, 56px);
+      box-shadow: 0 22px 50px var(--shadow);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: "☁️";
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      font-size: 4rem;
+      opacity: 0.14;
+      animation: floatCloud 4s ease-in-out infinite;
+    }
+
+    @keyframes floatCloud {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0ecff;
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--primary);
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+    }
+
+    h2 {
+      margin: 12px 0 6px;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      color: var(--accent);
+    }
+
+    p {
+      margin: 8px auto;
+      max-width: 680px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .actions {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    a.button,
+    button {
+      display: inline-block;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 22px;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    a.button {
+      color: white;
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      box-shadow: 0 10px 20px rgba(30, 58, 138, 0.24);
+    }
+
+    button {
+      color: var(--primary);
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+    }
+
+    a.button:hover,
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(30, 58, 138, 0.22);
+    }
+
+    .message {
+      margin-top: 22px;
+      min-height: 28px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 36px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <span class="badge">Cloud Computing Education</span>
+
+    <h1>Joy Zhou</h1>
+    <h2>Professor</h2>
+    <p>Northwest Vista College</p>
+
+    <p>
+      Welcome to my course resource website. Explore interactive learning activities,
+      cloud computing lessons, and student-centered technology resources.
+    </p>
+
+    <div class="actions">
+      <a class="button" href="CloudComputingServiceModels.html">
+        Open Cloud Computing Service Models Lesson
+      </a>
+      <button onclick="showWelcomeMessage()">Welcome Message</button>
+    </div>
+
+    <div id="message" class="message" aria-live="polite"></div>
+
+    <footer>
+      &copy; <span id="year"></span> Joy Zhou · Northwest Vista College
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function showWelcomeMessage() {
+      const message = document.getElementById("message");
+      message.textContent = "Welcome! Click the lesson link to begin exploring IaaS, PaaS, and SaaS.";
+    }
+  </script>
+</body>
+</html>
