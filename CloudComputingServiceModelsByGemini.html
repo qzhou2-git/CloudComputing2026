@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloud Model Explorer</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .box { border: 2px solid #333; padding: 15px; margin: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .box:hover { background-color: #f0f0f0; }
+        #display { margin-top: 20px; padding: 20px; background: #e7f3fe; border-left: 6px solid #2196F3; }
+    </style>
+</head>
+<body>
+
+    <h1>Cloud Computing Service Models</h1>
+    <p>Click a box to see what you manage vs. what the provider manages:</p>
+
+    <div class="box" onclick="showInfo('IaaS')">
+        <h3>IaaS (Infrastructure as a Service)</h3>
+        <p>Provider: Hardware & Networking | You: OS, Data, Apps</p>
+    </div>
+
+    <div class="box" onclick="showInfo('PaaS')">
+        <h3>PaaS (Platform as a Service)</h3>
+        <p>Provider: Hardware, OS, Runtime | You: Data, Apps</p>
+    </div>
+
+    <div class="box" onclick="showInfo('SaaS')">
+        <h3>SaaS (Software as a Service)</h3>
+        <p>Provider: Everything | You: Just use the app</p>
+    </div>
+
+    <div id="display">Select a model above to see the breakdown.</div>
+
+    <script>
+        function showInfo(model) {
+            const info = {
+                'IaaS': "<strong>IaaS:</strong> You have maximum control. Think of this as renting a raw virtual server. You install the OS and configure everything just like a physical machine.",
+                'PaaS': "<strong>PaaS:</strong> You focus on code. The provider gives you a 'sandbox' where you upload your app, and they handle all the server updates and OS maintenance.",
+                'SaaS': "<strong>SaaS:</strong> No management! You just log in to a web browser (like Gmail or Netflix). The provider handles 100% of the backend."
+            };
+            document.getElementById('display').innerHTML = info[model];
+        }
+    </script>
+</body>
+</html>
