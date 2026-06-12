@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Services on AWS Interactive Lesson</title>
+<style>
+:root{--primary:#1e3a8a;--secondary:#2563eb;--accent:#f97316;--success:#16a34a;--danger:#dc2626;--bg:#f5f8ff;--card:#fff;--text:#1f2937;--muted:#64748b;--line:#dbeafe;--shadow:rgba(30,58,138,.15)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 32%),radial-gradient(circle at bottom right,rgba(249,115,22,.15),transparent 35%),var(--bg);line-height:1.55}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:2rem 1rem;text-align:center;position:relative;overflow:hidden}
+header:after{content:"🤖";position:absolute;right:7%;top:18%;font-size:7rem;opacity:.18;animation:floatIcon 4s ease-in-out infinite}
+@keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+header h1{margin:0;font-size:clamp(2rem,5vw,3.6rem)}
+header p{max-width:900px;margin:.75rem auto 0;font-size:1.1rem}
+main{width:min(1120px,94vw);margin:1.5rem auto 3rem}
+.layout{display:grid;grid-template-columns:285px 1fr;gap:1rem;align-items:start}
+nav{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:1rem;box-shadow:0 12px 30px var(--shadow);position:sticky;top:1rem}
+nav h2{margin:0 0 .75rem;font-size:1rem;color:var(--primary)}
+nav button{width:100%;margin:.3rem 0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:.75rem;text-align:left;font-weight:700;color:var(--text);cursor:pointer;transition:.2s}
+nav button:hover,nav button.active{background:#eff6ff;border-color:var(--secondary);transform:translateX(3px)}
+.progress-card{margin-top:1rem;padding:.9rem;border-radius:16px;background:#eff6ff;border:1px solid var(--line)}
+.meter{height:14px;background:#dbeafe;border-radius:999px;overflow:hidden;margin-top:.5rem}
+.meter div{height:100%;width:0%;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .35s}
+.panel{display:none;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:26px;padding:clamp(1rem,3vw,1.75rem);box-shadow:0 14px 35px var(--shadow);min-height:660px}
+.panel.active{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tag{display:inline-block;background:#dbeafe;color:var(--primary);border-radius:999px;padding:.35rem .75rem;font-weight:800;font-size:.9rem;margin-bottom:.75rem}
+h2,h3{color:var(--primary)}
+.hero-box,.callout,.activity-card,.concept-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1rem;margin:1rem 0;box-shadow:0 8px 18px rgba(30,58,138,.07)}
+.hero-box{background:linear-gradient(135deg,#eff6ff,#fff);border-left:8px solid var(--secondary)}
+.callout{background:#fff7ed;border-left:8px solid var(--accent)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.concept-card{min-height:220px}.concept-card .icon{font-size:2.8rem;display:block;margin-bottom:.5rem}
+.genai{border-top:8px solid #8b5cf6}.vision{border-top:8px solid #2563eb}.speech{border-top:8px solid #16a34a}.language{border-top:8px solid #f97316}.search{border-top:8px solid #c8102e}.ml{border-top:8px solid #facc15}
+button.primary,button.secondary{border:0;border-radius:14px;padding:.8rem 1rem;font:inherit;font-weight:800;cursor:pointer;transition:.2s}
+button.primary{background:linear-gradient(135deg,var(--secondary),var(--primary));color:white}
+button.secondary{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+button.primary:hover,button.secondary:hover{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
+.service-explorer{display:grid;grid-template-columns:1fr 1.2fr;gap:1rem}
+.service-buttons{display:grid;gap:.7rem}
+.service-btn{background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;text-align:left;font-weight:800;cursor:pointer}
+.service-btn.selected,.service-btn:hover{background:#eff6ff;border-color:var(--secondary)}
+.sort-board{display:grid;grid-template-columns:1fr 1.35fr;gap:1rem}
+.cards,.dropzones{display:grid;gap:.7rem}
+.drag-card{background:white;border:2px solid var(--line);border-radius:14px;padding:.8rem;cursor:grab;font-weight:700;box-shadow:0 6px 14px rgba(30,58,138,.08)}
+.dropzones{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dropzone{min-height:250px;background:#f8fafc;border:2px dashed #93c5fd;border-radius:18px;padding:.8rem}
+.dropzone h3{margin-top:0;font-size:1.05rem}.dropzone.over{background:#eff6ff;border-color:var(--secondary)}
+.dropped{margin:.4rem 0;padding:.6rem;border-radius:12px;background:#fff;border:1px solid var(--line)}
+.scenario-grid{display:grid;gap:.85rem}.scenario{background:#fff;border:2px solid var(--line);border-radius:18px;padding:1rem}
+select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:.75rem;font:inherit;background:#fff;margin-top:.4rem}
+textarea{min-height:95px;resize:vertical}label{display:block;margin-top:.8rem;font-weight:800}
+.feedback{margin-top:.8rem;padding:.8rem;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-weight:700}
+.feedback.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.feedback.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.quiz-option{display:block;width:100%;text-align:left;margin:.5rem 0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;cursor:pointer;font-weight:700}
+.quiz-option.correct{border-color:var(--success);background:#ecfdf5}.quiz-option.wrong{border-color:var(--danger);background:#fef2f2}
+.badge{display:inline-block;padding:.45rem .7rem;border-radius:999px;background:#eff6ff;border:1px solid var(--line);margin:.25rem;font-weight:800;color:var(--primary)}
+.summary-output{white-space:pre-wrap;background:#f8fafc;border:1px dashed var(--secondary);border-radius:18px;padding:1rem;min-height:215px}
+footer{text-align:center;margin-top:2rem;color:var(--muted);font-weight:700}
+@media(max-width:950px){.layout,.grid-3,.grid-2,.service-explorer,.sort-board,.dropzones{grid-template-columns:1fr}nav{position:static}header:after{display:none}}
+</style>
+</head>
+<body>
+<header>
+<h1>AI Services on AWS</h1>
+<p>Interactive freshman lesson: discover how AWS AI services can understand text, images, speech, recommendations, search, and generative AI tasks through beginner-friendly examples and hands-on decision activities.</p>
+</header>
+<main>
+<div class="layout">
+<nav aria-label="Lesson navigation">
+<h2>Lesson Menu</h2>
+<button class="active" data-panel="welcome">1. Welcome</button>
+<button data-panel="concept">2. Big Idea</button>
+<button data-panel="services">3. AWS AI Services</button>
+<button data-panel="explorer">4. Service Explorer</button>
+<button data-panel="sort">5. Sort AI Use Cases</button>
+<button data-panel="scenario">6. Choose a Service</button>
+<button data-panel="quiz">7. Knowledge Check</button>
+<button data-panel="wrap">8. Wrap-Up</button>
+<div class="progress-card"><strong>Progress</strong><div class="meter"><div id="progressBar"></div></div><p id="progressText">0% complete</p></div>
+</nav>
+<section>
+<article id="welcome" class="panel active">
+<span class="tag">Community College Cloud Computing</span>
+<h2>Welcome, Future AI Cloud Builders!</h2>
+<div class="hero-box"><strong>Today’s goal:</strong> By the end of this lesson, you will be able to describe common AWS AI services and choose an appropriate service for a beginner-friendly real-world problem.</div>
+<p>Artificial intelligence can help computers recognize images, understand speech, summarize text, translate language, recommend products, and support chat experiences. AWS offers managed AI services so teams can use AI without building everything from scratch.</p>
+<div class="grid-3">
+<div class="concept-card genai"><span class="icon">🤖</span><h3>Generate</h3><p>Create or summarize text, support chatbots, and build generative AI applications.</p></div>
+<div class="concept-card vision"><span class="icon">🖼️</span><h3>See</h3><p>Analyze images and videos to detect objects, text, faces, or unsafe content.</p></div>
+<div class="concept-card speech"><span class="icon">🎙️</span><h3>Listen & Speak</h3><p>Convert speech to text, text to speech, or build voice-based interactions.</p></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('concept')">Start Lesson</button></div>
+</article>
+
+<article id="concept" class="panel">
+<span class="tag">Beginner Big Idea</span>
+<h2>AWS AI Services Help Apps Become Smarter</h2>
+<p>AWS AI services are cloud tools that add intelligence to applications. Instead of writing complex AI algorithms from scratch, developers can connect to AWS services through the cloud.</p>
+<div class="callout"><strong>Real-world application:</strong> A campus help desk wants a website where students can ask common questions, upload screenshots of error messages, and listen to instructions in audio form. AWS AI services can help with chat, image text detection, translation, and voice output.</div>
+<h3>Three Ways to Think About AI on AWS</h3>
+<div class="grid-3">
+<div class="concept-card genai"><span class="icon">🧠</span><h3>Ready-to-use AI</h3><p>Services such as Rekognition, Polly, Translate, and Comprehend solve common AI tasks.</p></div>
+<div class="concept-card ml"><span class="icon">🧪</span><h3>Build ML Models</h3><p>Amazon SageMaker helps teams build, train, and deploy machine learning models.</p></div>
+<div class="concept-card genai"><span class="icon">✨</span><h3>Generative AI</h3><p>Amazon Bedrock helps developers build apps using foundation models.</p></div>
+</div>
+<div class="activity-card"><h3>Quick Reflection</h3><label for="reflection">Where have you seen AI used in daily life?</label><textarea id="reflection" placeholder="Example: I have seen AI in phone assistants, chatbots, translation tools, shopping recommendations, or image search..."></textarea><div class="btn-row"><button class="primary" onclick="saveReflection()">Save Reflection</button></div><p id="reflectionFeedback" class="feedback">Your response will appear in your final summary.</p></div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('services')">Explore AWS AI Services</button></div>
+</article>
+
+<article id="services" class="panel">
+<span class="tag">Core Content</span><h2>Common AWS AI Services for Beginners</h2>
+<div class="grid-3">
+<div class="concept-card genai"><span class="icon">✨</span><h3>Amazon Bedrock</h3><p>Build generative AI applications using foundation models.</p><p><strong>Use for:</strong> chat, summaries, content generation.</p></div>
+<div class="concept-card vision"><span class="icon">🖼️</span><h3>Amazon Rekognition</h3><p>Analyze images and videos for objects, text, people, and content moderation.</p><p><strong>Use for:</strong> image analysis.</p></div>
+<div class="concept-card speech"><span class="icon">🎧</span><h3>Amazon Transcribe</h3><p>Convert speech recordings into text.</p><p><strong>Use for:</strong> captions, notes, transcripts.</p></div>
+<div class="concept-card speech"><span class="icon">🗣️</span><h3>Amazon Polly</h3><p>Convert text into realistic speech.</p><p><strong>Use for:</strong> audio instructions and accessibility.</p></div>
+<div class="concept-card language"><span class="icon">🌎</span><h3>Amazon Translate</h3><p>Translate text between languages.</p><p><strong>Use for:</strong> multilingual support.</p></div>
+<div class="concept-card language"><span class="icon">📄</span><h3>Amazon Comprehend</h3><p>Analyze text for sentiment, key phrases, and entities.</p><p><strong>Use for:</strong> understanding feedback.</p></div>
+<div class="concept-card search"><span class="icon">🔍</span><h3>Amazon Kendra</h3><p>Create intelligent search across documents and knowledge bases.</p><p><strong>Use for:</strong> FAQ and document search.</p></div>
+<div class="concept-card ml"><span class="icon">🧪</span><h3>Amazon SageMaker</h3><p>Build, train, and deploy custom machine learning models.</p><p><strong>Use for:</strong> custom ML projects.</p></div>
+<div class="concept-card data"><span class="icon">⭐</span><h3>Amazon Personalize</h3><p>Create personalized recommendations.</p><p><strong>Use for:</strong> suggested products, lessons, or content.</p></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('explorer')">Open Service Explorer</button></div>
+</article>
+
+<article id="explorer" class="panel">
+<span class="tag">Interactive Explorer</span><h2>Service Explorer</h2>
+<p>Select a student-friendly AI task and see which AWS service might help.</p>
+<div class="service-explorer">
+<div class="service-buttons">
+<button class="service-btn selected" onclick="showService('bedrock',this)">🤖 Build a chatbot</button>
+<button class="service-btn" onclick="showService('rekognition',this)">🖼️ Analyze an image</button>
+<button class="service-btn" onclick="showService('transcribe',this)">🎧 Turn speech into text</button>
+<button class="service-btn" onclick="showService('polly',this)">🗣️ Turn text into speech</button>
+<button class="service-btn" onclick="showService('translate',this)">🌎 Translate text</button>
+<button class="service-btn" onclick="showService('comprehend',this)">📄 Understand text feedback</button>
+</div>
+<div id="serviceOutput" class="activity-card"></div>
+</div>
+<div class="callout"><strong>Professor tip:</strong> Start with the task first. Ask: “What do I need the app to do?” Then choose the AWS AI service that matches the task.</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('sort')">Sort AI Use Cases</button></div>
+</article>
+
+<article id="sort" class="panel">
+<span class="tag">Hands-On Practice</span><h2>Sort the AI Use Cases</h2>
+<p>Drag each card into the correct category. If drag-and-drop is difficult, click a card and then click a category box.</p>
+<div class="sort-board"><div><h3>Use Case Cards</h3><div id="cards" class="cards"></div></div><div class="dropzones"><div class="dropzone" data-type="Language" tabindex="0"><h3>📄 Language</h3><p>Text, translation, sentiment, chat.</p></div><div class="dropzone" data-type="Vision" tabindex="0"><h3>🖼️ Vision</h3><p>Images and videos.</p></div><div class="dropzone" data-type="Speech" tabindex="0"><h3>🎙️ Speech</h3><p>Audio, voice, and captions.</p></div></div></div>
+<div class="btn-row"><button class="primary" onclick="checkSort()">Check Sorting</button><button class="secondary" onclick="resetSort()">Reset Cards</button></div><p id="sortFeedback" class="feedback">Sort the cards, then check your work.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('scenario')">Apply to Scenarios</button></div>
+</article>
+
+<article id="scenario" class="panel">
+<span class="tag">Real-World Decision Making</span><h2>Choose the Best AWS AI Service</h2><p>For each situation, choose the best AWS AI service.</p>
+<div class="scenario-grid">
+<div class="scenario"><h3>Scenario 1: Student Help Chatbot</h3><p>A college wants a chatbot to answer common questions using generative AI.</p><select id="scenario1"><option value="">Choose...</option><option>Amazon Bedrock</option><option>Amazon Rekognition</option><option>Amazon Polly</option></select></div>
+<div class="scenario"><h3>Scenario 2: Caption Lecture Audio</h3><p>An instructor has an audio recording and wants a text transcript.</p><select id="scenario2"><option value="">Choose...</option><option>Amazon Transcribe</option><option>Amazon Translate</option><option>Amazon Personalize</option></select></div>
+<div class="scenario"><h3>Scenario 3: Read Instructions Aloud</h3><p>A student wants written lab instructions converted into spoken audio.</p><select id="scenario3"><option value="">Choose...</option><option>Amazon Polly</option><option>Amazon Kendra</option><option>Amazon Rekognition</option></select></div>
+<div class="scenario"><h3>Scenario 4: Analyze Student Feedback</h3><p>A program wants to identify common phrases and sentiment in student comments.</p><select id="scenario4"><option value="">Choose...</option><option>Amazon Comprehend</option><option>Amazon Transcribe</option><option>Amazon SageMaker</option></select></div>
+<div class="scenario"><h3>Scenario 5: Detect Text in an Image</h3><p>A student uploads a screenshot and wants the app to detect text in the image.</p><select id="scenario5"><option value="">Choose...</option><option>Amazon Rekognition</option><option>Amazon Translate</option><option>Amazon Bedrock</option></select></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="checkScenarios()">Check Scenarios</button></div><p id="scenarioFeedback" class="feedback">Choose one service for each scenario.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('quiz')">Take Knowledge Check</button></div>
+</article>
+
+<article id="quiz" class="panel">
+<span class="tag">Knowledge Check</span><h2>Quick Quiz</h2><div id="quizBox"></div>
+<div class="btn-row"><button class="primary" onclick="nextQuiz()">Next Question</button><button class="secondary" onclick="restartQuiz()">Restart Quiz</button></div>
+<p id="quizFeedback" class="feedback">Answer the question to receive feedback.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('wrap')">Finish Lesson</button></div>
+</article>
+
+<article id="wrap" class="panel">
+<span class="tag">Wrap-Up</span><h2>AI Services on AWS Summary</h2>
+<div class="activity-card"><h3>Badges Earned</h3><div id="badgeBox"><span class="badge">AWS AI Beginner</span></div></div>
+<div class="activity-card"><h3>Your Personal Study Notes</h3><div id="summaryOutput" class="summary-output">Click the button below to generate your study summary.</div><div class="btn-row"><button class="primary" onclick="generateSummary()">Generate Summary</button><button class="secondary" onclick="window.print()">Print or Save as PDF</button></div></div>
+<div class="callout"><strong>Exit Ticket:</strong> In one sentence, name one AWS AI service and what it can help an application do.<label for="exitTicket">Your answer:</label><textarea id="exitTicket" placeholder="Amazon ____ can help an application..."></textarea></div>
+</article>
+</section></div>
+<footer>Interactive lesson for incoming cloud computing students · HTML5, CSS, and JavaScript</footer>
+</main>
+
+<script>
+const completed=new Set();let selectedCard=null,quizIndex=0,quizScore=0,reflection="",sortScore=0,scenarioScore=0;
+const panels=document.querySelectorAll(".panel"),navButtons=document.querySelectorAll("nav button");
+const useCards=[
+{name:"Translate a welcome message into Spanish",type:"Language"},
+{name:"Summarize a long FAQ answer",type:"Language"},
+{name:"Find sentiment in student comments",type:"Language"},
+{name:"Detect objects in a campus event photo",type:"Vision"},
+{name:"Read text from a screenshot",type:"Vision"},
+{name:"Moderate uploaded images",type:"Vision"},
+{name:"Create captions from lecture audio",type:"Speech"},
+{name:"Turn lab instructions into spoken audio",type:"Speech"},
+{name:"Build a voice response experience",type:"Speech"}
+];
+const quizQuestions=[
+{question:"Which AWS service is commonly used to build generative AI applications with foundation models?",options:["Amazon Bedrock","Amazon Rekognition","Amazon Polly"],answer:"Amazon Bedrock",explain:"Amazon Bedrock supports building generative AI applications using foundation models."},
+{question:"Which service converts speech audio into text?",options:["Amazon Transcribe","Amazon Translate","Amazon Personalize"],answer:"Amazon Transcribe",explain:"Amazon Transcribe creates text transcripts from speech audio."},
+{question:"Which service converts text into speech?",options:["Amazon Polly","Amazon Comprehend","Amazon Kendra"],answer:"Amazon Polly",explain:"Amazon Polly turns text into lifelike speech."},
+{question:"Which service analyzes images and videos?",options:["Amazon Rekognition","Amazon SageMaker","Amazon Translate"],answer:"Amazon Rekognition",explain:"Amazon Rekognition helps analyze images and videos."},
+{question:"Which service can detect sentiment and key phrases in text?",options:["Amazon Comprehend","Amazon Polly","Amazon Transcribe"],answer:"Amazon Comprehend",explain:"Amazon Comprehend analyzes text for insights such as sentiment and key phrases."}
+];
+navButtons.forEach(button=>button.addEventListener("click",()=>goToPanel(button.dataset.panel)));
+function goToPanel(id){panels.forEach(panel=>panel.classList.remove("active"));navButtons.forEach(button=>button.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelector(`nav button[data-panel="${id}"]`).classList.add("active");completed.add(id);updateProgress();if(id==="sort"&&!document.getElementById("cards").children.length)buildSortCards();if(id==="quiz")renderQuiz();window.scrollTo({top:0,behavior:"smooth"})}
+function updateProgress(){const percent=Math.round(completed.size/navButtons.length*100);document.getElementById("progressBar").style.width=percent+"%";document.getElementById("progressText").textContent=percent+"% complete"}
+function saveReflection(){reflection=document.getElementById("reflection").value.trim();const feedback=document.getElementById("reflectionFeedback");if(reflection.length>10){feedback.textContent="Reflection saved. Great connection to real AI experiences.";feedback.className="feedback good"}else{feedback.textContent="Try adding one more detail about where you have seen AI used.";feedback.className="feedback bad"}}
+function showService(type,el){document.querySelectorAll(".service-btn").forEach(btn=>btn.classList.remove("selected"));el.classList.add("selected");const data={bedrock:["Amazon Bedrock","Build generative AI apps such as chatbots, summarizers, and content assistants.","Example: a student help chatbot that answers common course questions."],rekognition:["Amazon Rekognition","Analyze images and videos for objects, text, scenes, people, or unsafe content.","Example: detecting text in an uploaded screenshot."],transcribe:["Amazon Transcribe","Convert speech audio into written text.","Example: creating captions or transcripts from a lecture recording."],polly:["Amazon Polly","Convert written text into spoken audio.","Example: reading lab instructions aloud for accessibility."],translate:["Amazon Translate","Translate text between languages.","Example: translating welcome instructions for multilingual students."],comprehend:["Amazon Comprehend","Analyze text for sentiment, key phrases, entities, and language.","Example: finding common themes in student survey comments."]};const item=data[type];document.getElementById("serviceOutput").innerHTML=`<h3>${item[0]}</h3><p><strong>What it does:</strong> ${item[1]}</p><p><strong>Student-friendly example:</strong> ${item[2]}</p>`}
+function buildSortCards(){const cards=document.getElementById("cards");cards.innerHTML="";shuffle(useCards).forEach((card,index)=>{const div=document.createElement("div");div.className="drag-card";div.draggable=true;div.tabIndex=0;div.id="card-"+index;div.dataset.type=card.type;div.textContent=card.name;div.addEventListener("dragstart",e=>e.dataTransfer.setData("text/plain",div.id));div.addEventListener("click",()=>{document.querySelectorAll(".drag-card").forEach(c=>c.style.outline="none");selectedCard=div;div.style.outline="3px solid var(--accent)"});cards.appendChild(div)});setupDropzones()}
+function setupDropzones(){document.querySelectorAll(".dropzone").forEach(zone=>{zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("over")});zone.addEventListener("dragleave",()=>zone.classList.remove("over"));zone.addEventListener("drop",e=>{e.preventDefault();zone.classList.remove("over");placeCard(document.getElementById(e.dataTransfer.getData("text/plain")),zone)});zone.addEventListener("click",()=>{if(selectedCard){placeCard(selectedCard,zone);selectedCard.style.outline="none";selectedCard=null}})})}
+function placeCard(card,zone){if(!card)return;const item=document.createElement("div");item.className="dropped";item.dataset.type=card.dataset.type;item.textContent=card.textContent;zone.appendChild(item);card.remove()}
+function checkSort(){let correct=0,total=0;document.querySelectorAll(".dropzone").forEach(zone=>{zone.querySelectorAll(".dropped").forEach(item=>{total++;if(item.dataset.type===zone.dataset.type)correct++})});sortScore=correct;const feedback=document.getElementById("sortFeedback");if(total<useCards.length){feedback.textContent=`You sorted ${total}/${useCards.length} cards. Sort all cards before checking.`;feedback.className="feedback bad"}else if(correct===useCards.length){feedback.textContent="Excellent! All AI use cases are sorted correctly.";feedback.className="feedback good"}else{feedback.textContent=`You got ${correct}/${useCards.length}. Review language, vision, and speech AI tasks, then try again.`;feedback.className="feedback bad"}}
+function resetSort(){document.querySelectorAll(".dropzone .dropped").forEach(item=>item.remove());buildSortCards();document.getElementById("sortFeedback").textContent="Cards reset. Try sorting again.";document.getElementById("sortFeedback").className="feedback"}
+function checkScenarios(){const answers={scenario1:"Amazon Bedrock",scenario2:"Amazon Transcribe",scenario3:"Amazon Polly",scenario4:"Amazon Comprehend",scenario5:"Amazon Rekognition"};scenarioScore=0;Object.keys(answers).forEach(id=>{if(document.getElementById(id).value===answers[id])scenarioScore++});const feedback=document.getElementById("scenarioFeedback");if(scenarioScore===5){feedback.textContent="Perfect! You matched each scenario to the best AWS AI service.";feedback.className="feedback good"}else{feedback.textContent=`You got ${scenarioScore}/5. Hint: Bedrock = generative AI, Transcribe = speech to text, Polly = text to speech, Comprehend = text analysis, Rekognition = image analysis.`;feedback.className="feedback bad"}}
+function renderQuiz(){const quizBox=document.getElementById("quizBox");const q=quizQuestions[quizIndex];quizBox.innerHTML=`<div class="activity-card"><h3>Question ${quizIndex+1} of ${quizQuestions.length}</h3><p><strong>${q.question}</strong></p>${q.options.map(option=>`<button class="quiz-option" onclick="answerQuiz(this, '${option.replace(/'/g,"\\'")}')">${option}</button>`).join("")}</div>`;document.getElementById("quizFeedback").textContent="Answer the question to receive feedback.";document.getElementById("quizFeedback").className="feedback"}
+function answerQuiz(button,answer){const q=quizQuestions[quizIndex];document.querySelectorAll(".quiz-option").forEach(btn=>{btn.disabled=true;if(btn.textContent===q.answer)btn.classList.add("correct")});if(answer===q.answer){button.classList.add("correct");quizScore++;document.getElementById("quizFeedback").textContent="Correct! "+q.explain;document.getElementById("quizFeedback").className="feedback good"}else{button.classList.add("wrong");document.getElementById("quizFeedback").textContent="Not quite. "+q.explain;document.getElementById("quizFeedback").className="feedback bad"}}
+function nextQuiz(){if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuiz()}else{document.getElementById("quizFeedback").textContent=`Quiz complete! Your current score is ${quizScore}/${quizQuestions.length}.`;document.getElementById("quizFeedback").className=quizScore>=4?"feedback good":"feedback bad"}}
+function restartQuiz(){quizIndex=0;quizScore=0;renderQuiz()}
+function generateSummary(){const exitTicket=document.getElementById("exitTicket").value.trim();const summary=`My AI Services on AWS Study Notes
+
+Main Idea:
+AWS AI services help applications use artificial intelligence without requiring beginners to build complex AI systems from scratch.
+
+Common Services:
+Amazon Bedrock — generative AI applications using foundation models.
+Amazon Rekognition — image and video analysis.
+Amazon Transcribe — speech to text.
+Amazon Polly — text to speech.
+Amazon Translate — language translation.
+Amazon Comprehend — text analysis such as sentiment and key phrases.
+Amazon Kendra — intelligent search.
+Amazon SageMaker — build, train, and deploy custom machine learning models.
+Amazon Personalize — recommendations.
+
+How to Choose a Service:
+Start with the task. Ask whether the app needs to understand language, analyze images, process speech, search information, recommend content, or generate responses.
+
+My Reflection:
+${reflection||"No reflection saved yet."}
+
+Practice Scores:
+Sorting Activity: ${sortScore}/9
+Scenario Activity: ${scenarioScore}/5
+Quiz Score: ${quizScore}/5
+
+My Exit Ticket:
+${exitTicket||"Write your AWS AI service example here."}`;document.getElementById("summaryOutput").textContent=summary;updateBadges()}
+function updateBadges(){const badges=["AWS AI Beginner"];if(reflection.length>10)badges.push("Reflective Learner");if(sortScore>=7)badges.push("AI Use Case Sorter");if(scenarioScore===5)badges.push("Scenario Solver");if(quizScore>=4)badges.push("AWS AI Explorer");document.getElementById("badgeBox").innerHTML=badges.map(badge=>`<span class="badge">${badge}</span>`).join("")}
+function shuffle(array){return[...array].sort(()=>Math.random()-.5)}
+showService("bedrock",document.querySelector(".service-btn"));updateProgress();
+</script>
+</body>
+</html>
