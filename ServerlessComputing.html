@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Serverless Computing Interactive Lesson</title>
+<style>
+:root{--primary:#1e3a8a;--secondary:#2563eb;--accent:#f97316;--success:#16a34a;--danger:#dc2626;--bg:#f5f8ff;--card:#fff;--text:#1f2937;--muted:#64748b;--line:#dbeafe;--shadow:rgba(30,58,138,.15)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 32%),radial-gradient(circle at bottom right,rgba(249,115,22,.15),transparent 35%),var(--bg);line-height:1.55}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:2rem 1rem;text-align:center;position:relative;overflow:hidden}
+header:after{content:"⚡";position:absolute;right:7%;top:18%;font-size:7rem;opacity:.18;animation:floatIcon 4s ease-in-out infinite}
+@keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+header h1{margin:0;font-size:clamp(2rem,5vw,3.6rem)}
+header p{max-width:900px;margin:.75rem auto 0;font-size:1.1rem}
+main{width:min(1120px,94vw);margin:1.5rem auto 3rem}
+.layout{display:grid;grid-template-columns:285px 1fr;gap:1rem;align-items:start}
+nav{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:1rem;box-shadow:0 12px 30px var(--shadow);position:sticky;top:1rem}
+nav h2{margin:0 0 .75rem;font-size:1rem;color:var(--primary)}
+nav button{width:100%;margin:.3rem 0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:.75rem;text-align:left;font-weight:700;color:var(--text);cursor:pointer;transition:.2s}
+nav button:hover,nav button.active{background:#eff6ff;border-color:var(--secondary);transform:translateX(3px)}
+.progress-card{margin-top:1rem;padding:.9rem;border-radius:16px;background:#eff6ff;border:1px solid var(--line)}
+.meter{height:14px;background:#dbeafe;border-radius:999px;overflow:hidden;margin-top:.5rem}
+.meter div{height:100%;width:0%;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .35s}
+.panel{display:none;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:26px;padding:clamp(1rem,3vw,1.75rem);box-shadow:0 14px 35px var(--shadow);min-height:660px}
+.panel.active{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tag{display:inline-block;background:#dbeafe;color:var(--primary);border-radius:999px;padding:.35rem .75rem;font-weight:800;font-size:.9rem;margin-bottom:.75rem}
+h2,h3{color:var(--primary)}
+.hero-box,.callout,.activity-card,.concept-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1rem;margin:1rem 0;box-shadow:0 8px 18px rgba(30,58,138,.07)}
+.hero-box{background:linear-gradient(135deg,#eff6ff,#fff);border-left:8px solid var(--secondary)}
+.callout{background:#fff7ed;border-left:8px solid var(--accent)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.concept-card{min-height:220px}.concept-card .icon{font-size:2.8rem;display:block;margin-bottom:.5rem}
+.compute{border-top:8px solid #2563eb}.event{border-top:8px solid #f97316}.api{border-top:8px solid #16a34a}.data{border-top:8px solid #8b5cf6}.workflow{border-top:8px solid #c8102e}.cost{border-top:8px solid #facc15}
+button.primary,button.secondary{border:0;border-radius:14px;padding:.8rem 1rem;font:inherit;font-weight:800;cursor:pointer;transition:.2s}
+button.primary{background:linear-gradient(135deg,var(--secondary),var(--primary));color:white}
+button.secondary{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+button.primary:hover,button.secondary:hover{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
+.architect{display:grid;grid-template-columns:1fr 1.2fr;gap:1rem}
+.arch-buttons{display:grid;gap:.7rem}
+.arch-btn{background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;text-align:left;font-weight:800;cursor:pointer}
+.arch-btn.selected,.arch-btn:hover{background:#eff6ff;border-color:var(--secondary)}
+.pipeline{display:grid;gap:.5rem;margin-top:1rem}
+.pipeline-step{padding:.8rem;border-radius:14px;background:#eff6ff;border:1px solid #bfdbfe;font-weight:800;display:flex;justify-content:space-between;gap:1rem}
+.sort-board{display:grid;grid-template-columns:1fr 1.35fr;gap:1rem}
+.cards,.dropzones{display:grid;gap:.7rem}
+.drag-card{background:white;border:2px solid var(--line);border-radius:14px;padding:.8rem;cursor:grab;font-weight:700;box-shadow:0 6px 14px rgba(30,58,138,.08)}
+.dropzones{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dropzone{min-height:250px;background:#f8fafc;border:2px dashed #93c5fd;border-radius:18px;padding:.8rem}
+.dropzone h3{margin-top:0;font-size:1.05rem}.dropzone.over{background:#eff6ff;border-color:var(--secondary)}
+.dropped{margin:.4rem 0;padding:.6rem;border-radius:12px;background:#fff;border:1px solid var(--line)}
+.scenario-grid{display:grid;gap:.85rem}.scenario{background:#fff;border:2px solid var(--line);border-radius:18px;padding:1rem}
+select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:.75rem;font:inherit;background:#fff;margin-top:.4rem}
+textarea{min-height:95px;resize:vertical}label{display:block;margin-top:.8rem;font-weight:800}
+.feedback{margin-top:.8rem;padding:.8rem;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-weight:700}
+.feedback.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.feedback.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.quiz-option{display:block;width:100%;text-align:left;margin:.5rem 0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;cursor:pointer;font-weight:700}
+.quiz-option.correct{border-color:var(--success);background:#ecfdf5}.quiz-option.wrong{border-color:var(--danger);background:#fef2f2}
+.badge{display:inline-block;padding:.45rem .7rem;border-radius:999px;background:#eff6ff;border:1px solid var(--line);margin:.25rem;font-weight:800;color:var(--primary)}
+.summary-output{white-space:pre-wrap;background:#f8fafc;border:1px dashed var(--secondary);border-radius:18px;padding:1rem;min-height:215px}
+footer{text-align:center;margin-top:2rem;color:var(--muted);font-weight:700}
+@media(max-width:950px){.layout,.grid-3,.grid-2,.architect,.sort-board,.dropzones{grid-template-columns:1fr}nav{position:static}header:after{display:none}}
+</style>
+</head>
+<body>
+<header>
+<h1>Serverless Computing</h1>
+<p>Interactive freshman lesson: learn what serverless means, how AWS Lambda and event-driven services work, and when serverless is a smart choice for cloud applications.</p>
+</header>
+<main>
+<div class="layout">
+<nav aria-label="Lesson navigation">
+<h2>Lesson Menu</h2>
+<button class="active" data-panel="welcome">1. Welcome</button>
+<button data-panel="concept">2. Big Idea</button>
+<button data-panel="services">3. Serverless Services</button>
+<button data-panel="architect">4. Build an Architecture</button>
+<button data-panel="sort">5. Sort Use Cases</button>
+<button data-panel="scenario">6. Choose a Design</button>
+<button data-panel="quiz">7. Knowledge Check</button>
+<button data-panel="wrap">8. Wrap-Up</button>
+<div class="progress-card"><strong>Progress</strong><div class="meter"><div id="progressBar"></div></div><p id="progressText">0% complete</p></div>
+</nav>
+<section>
+<article id="welcome" class="panel active">
+<span class="tag">Community College Cloud Computing</span>
+<h2>Welcome, Future Serverless Builders!</h2>
+<div class="hero-box"><strong>Today’s goal:</strong> By the end of this lesson, you will be able to explain serverless computing, identify common AWS serverless services, and choose a serverless design for a simple real-world task.</div>
+<p>Serverless does not mean there are no servers. It means you do not manage the servers. The cloud provider runs and scales the infrastructure while you focus on code, events, and data.</p>
+<div class="grid-3">
+<div class="concept-card compute"><span class="icon">⚡</span><h3>Run Code</h3><p>Use functions to run small pieces of code when something happens.</p></div>
+<div class="concept-card event"><span class="icon">🎯</span><h3>Respond to Events</h3><p>Trigger work from uploads, button clicks, messages, schedules, or API requests.</p></div>
+<div class="concept-card cost"><span class="icon">💸</span><h3>Pay for Use</h3><p>Often pay based on requests and runtime instead of paying for always-on servers.</p></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('concept')">Start Lesson</button></div>
+</article>
+
+<article id="concept" class="panel">
+<span class="tag">Beginner Big Idea</span>
+<h2>Serverless Is Event-Driven Cloud Computing</h2>
+<p>In a traditional server setup, someone manages servers, operating systems, scaling, and patching. In a serverless setup, the cloud provider handles much of that work. You define what should happen when an event occurs.</p>
+<div class="callout"><strong>Real-world application:</strong> A student club website lets members upload event photos. When a photo is uploaded, a serverless function can automatically resize the image, save details in a database, and send a notification without running a full-time server.</div>
+<h3>Think of Serverless Like a Light Switch</h3>
+<div class="grid-3">
+<div class="concept-card event"><span class="icon">👆</span><h3>Event</h3><p>Something happens, such as a file upload or web request.</p></div>
+<div class="concept-card compute"><span class="icon">⚡</span><h3>Function</h3><p>A small piece of code runs in response to that event.</p></div>
+<div class="concept-card data"><span class="icon">📦</span><h3>Result</h3><p>The app stores data, sends a message, updates a page, or starts another step.</p></div>
+</div>
+<div class="activity-card"><h3>Quick Reflection</h3><label for="reflection">What is one task on a website or app that could happen automatically after a user clicks a button or uploads a file?</label><textarea id="reflection" placeholder="Example: Send a confirmation email after a student submits a form..."></textarea><div class="btn-row"><button class="primary" onclick="saveReflection()">Save Reflection</button></div><p id="reflectionFeedback" class="feedback">Your response will appear in your final summary.</p></div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('services')">Explore Serverless Services</button></div>
+</article>
+
+<article id="services" class="panel">
+<span class="tag">Core Content</span><h2>Common AWS Serverless Services</h2>
+<div class="grid-3">
+<div class="concept-card compute"><span class="icon">⚡</span><h3>AWS Lambda</h3><p>Runs code in response to events without managing servers.</p><p><strong>Use for:</strong> automation, APIs, file processing.</p></div>
+<div class="concept-card api"><span class="icon">🌐</span><h3>Amazon API Gateway</h3><p>Creates web APIs that can trigger Lambda functions.</p><p><strong>Use for:</strong> website and mobile app backends.</p></div>
+<div class="concept-card data"><span class="icon">🗃️</span><h3>Amazon DynamoDB</h3><p>A serverless NoSQL database that scales automatically.</p><p><strong>Use for:</strong> app data, profiles, orders, scores.</p></div>
+<div class="concept-card event"><span class="icon">📩</span><h3>Amazon SQS</h3><p>A message queue that helps systems process work reliably.</p><p><strong>Use for:</strong> buffering tasks and decoupling apps.</p></div>
+<div class="concept-card event"><span class="icon">📣</span><h3>Amazon SNS</h3><p>Sends notifications to subscribers or other services.</p><p><strong>Use for:</strong> alerts and fan-out messages.</p></div>
+<div class="concept-card workflow"><span class="icon">🧭</span><h3>AWS Step Functions</h3><p>Coordinates multiple steps in a workflow.</p><p><strong>Use for:</strong> approval flows and multi-step processes.</p></div>
+<div class="concept-card data"><span class="icon">🪣</span><h3>Amazon S3 Events</h3><p>S3 can trigger actions when files are uploaded or changed.</p><p><strong>Use for:</strong> image processing and file workflows.</p></div>
+<div class="concept-card event"><span class="icon">⏰</span><h3>Amazon EventBridge</h3><p>Routes events from apps, schedules, and AWS services.</p><p><strong>Use for:</strong> scheduled tasks and event routing.</p></div>
+<div class="concept-card cost"><span class="icon">🧾</span><h3>Pay-per-use Pattern</h3><p>Serverless services often charge based on requests, storage, or execution time.</p><p><strong>Use for:</strong> variable or unpredictable traffic.</p></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('architect')">Build an Architecture</button></div>
+</article>
+
+<article id="architect" class="panel">
+<span class="tag">Interactive Explorer</span><h2>Build a Serverless Architecture</h2>
+<p>Select a common app pattern and see how serverless services can connect.</p>
+<div class="architect">
+<div class="arch-buttons">
+<button class="arch-btn selected" onclick="showArchitecture('api',this)">🌐 Website form submission</button>
+<button class="arch-btn" onclick="showArchitecture('image',this)">🖼️ Photo upload processor</button>
+<button class="arch-btn" onclick="showArchitecture('queue',this)">📩 Order processing queue</button>
+<button class="arch-btn" onclick="showArchitecture('schedule',this)">⏰ Scheduled reminder</button>
+<button class="arch-btn" onclick="showArchitecture('workflow',this)">🧭 Multi-step approval</button>
+</div>
+<div id="architectureOutput" class="activity-card"></div>
+</div>
+<div class="callout"><strong>Professor tip:</strong> Serverless architectures usually start with an event. Ask: “What happens first?” Then decide which service responds to that event.</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('sort')">Sort Serverless Use Cases</button></div>
+</article>
+
+<article id="sort" class="panel">
+<span class="tag">Hands-On Practice</span><h2>Sort the Serverless Use Cases</h2>
+<p>Drag each card into the correct category. If drag-and-drop is difficult, click a card and then click a category box.</p>
+<div class="sort-board"><div><h3>Use Case Cards</h3><div id="cards" class="cards"></div></div><div class="dropzones"><div class="dropzone" data-type="Function" tabindex="0"><h3>⚡ Function</h3><p>Run code because something happened.</p></div><div class="dropzone" data-type="Event" tabindex="0"><h3>🎯 Event Source</h3><p>Start or route work.</p></div><div class="dropzone" data-type="Data" tabindex="0"><h3>🗃️ Data / Storage</h3><p>Store files or app data.</p></div></div></div>
+<div class="btn-row"><button class="primary" onclick="checkSort()">Check Sorting</button><button class="secondary" onclick="resetSort()">Reset Cards</button></div><p id="sortFeedback" class="feedback">Sort the cards, then check your work.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('scenario')">Apply to Scenarios</button></div>
+</article>
+
+<article id="scenario" class="panel">
+<span class="tag">Real-World Decision Making</span><h2>Choose the Best Serverless Design</h2><p>For each situation, choose the best AWS serverless service or pattern.</p>
+<div class="scenario-grid">
+<div class="scenario"><h3>Scenario 1: Website Contact Form</h3><p>A website needs to submit a form and run backend code without a full-time server.</p><select id="scenario1"><option value="">Choose...</option><option>API Gateway + Lambda</option><option>EC2 only</option><option>CloudFront only</option></select></div>
+<div class="scenario"><h3>Scenario 2: Uploaded Photo</h3><p>When a student uploads a photo to storage, code should automatically create a smaller copy.</p><select id="scenario2"><option value="">Choose...</option><option>S3 Event + Lambda</option><option>Manual download only</option><option>Route 53 only</option></select></div>
+<div class="scenario"><h3>Scenario 3: App Data</h3><p>A serverless app needs a database for user profiles and activity records.</p><select id="scenario3"><option value="">Choose...</option><option>Amazon DynamoDB</option><option>Amazon Polly</option><option>Amazon Route 53</option></select></div>
+<div class="scenario"><h3>Scenario 4: Many Tasks Arrive at Once</h3><p>An app receives many requests and needs to process them reliably one at a time.</p><select id="scenario4"><option value="">Choose...</option><option>Amazon SQS</option><option>Amazon Translate</option><option>AWS IAM only</option></select></div>
+<div class="scenario"><h3>Scenario 5: Multi-Step Approval</h3><p>A scholarship application needs review, approval, notification, and final record updates.</p><select id="scenario5"><option value="">Choose...</option><option>AWS Step Functions</option><option>Amazon S3 only</option><option>Amazon Rekognition</option></select></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="checkScenarios()">Check Scenarios</button></div><p id="scenarioFeedback" class="feedback">Choose one design for each scenario.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('quiz')">Take Knowledge Check</button></div>
+</article>
+
+<article id="quiz" class="panel">
+<span class="tag">Knowledge Check</span><h2>Quick Quiz</h2><div id="quizBox"></div>
+<div class="btn-row"><button class="primary" onclick="nextQuiz()">Next Question</button><button class="secondary" onclick="restartQuiz()">Restart Quiz</button></div>
+<p id="quizFeedback" class="feedback">Answer the question to receive feedback.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('wrap')">Finish Lesson</button></div>
+</article>
+
+<article id="wrap" class="panel">
+<span class="tag">Wrap-Up</span><h2>Serverless Computing Summary</h2>
+<div class="activity-card"><h3>Badges Earned</h3><div id="badgeBox"><span class="badge">Serverless Beginner</span></div></div>
+<div class="activity-card"><h3>Your Personal Study Notes</h3><div id="summaryOutput" class="summary-output">Click the button below to generate your study summary.</div><div class="btn-row"><button class="primary" onclick="generateSummary()">Generate Summary</button><button class="secondary" onclick="window.print()">Print or Save as PDF</button></div></div>
+<div class="callout"><strong>Exit Ticket:</strong> In one sentence, explain serverless computing to someone new to cloud computing.<label for="exitTicket">Your answer:</label><textarea id="exitTicket" placeholder="Serverless computing means..."></textarea></div>
+</article>
+</section></div>
+<footer>Interactive lesson for incoming cloud computing students · HTML5, CSS, and JavaScript</footer>
+</main>
+<script>
+const completed=new Set();let selectedCard=null,quizIndex=0,quizScore=0,reflection="",sortScore=0,scenarioScore=0;
+const panels=document.querySelectorAll(".panel"),navButtons=document.querySelectorAll("nav button");
+const useCards=[
+{name:"AWS Lambda runs code after a form is submitted",type:"Function"},
+{name:"Lambda resizes an uploaded image",type:"Function"},
+{name:"Lambda validates a payment request",type:"Function"},
+{name:"Amazon S3 starts work after a file upload",type:"Event"},
+{name:"EventBridge starts a job every morning",type:"Event"},
+{name:"API Gateway receives a web request",type:"Event"},
+{name:"DynamoDB stores user profile records",type:"Data"},
+{name:"S3 stores uploaded project files",type:"Data"},
+{name:"DynamoDB stores game scores for students",type:"Data"}
+];
+const quizQuestions=[
+{question:"What does serverless mean?",options:["There are no servers anywhere","You do not manage the servers","You must buy your own servers"],answer:"You do not manage the servers",explain:"Serverless means the provider manages the server infrastructure while you focus on code and events."},
+{question:"Which AWS service runs code in response to events?",options:["AWS Lambda","Amazon Route 53","Amazon Polly"],answer:"AWS Lambda",explain:"AWS Lambda runs functions when triggered by events."},
+{question:"Which service is commonly used to create an API that triggers Lambda?",options:["Amazon API Gateway","Amazon S3 Glacier","Amazon Translate"],answer:"Amazon API Gateway",explain:"API Gateway can receive web requests and connect them to Lambda functions."},
+{question:"Which service is a serverless NoSQL database?",options:["Amazon DynamoDB","Amazon EC2","Amazon Rekognition"],answer:"Amazon DynamoDB",explain:"DynamoDB is a serverless NoSQL database that scales automatically."},
+{question:"What is a good serverless use case?",options:["Run code only when a file is uploaded","Maintain a physical server rack","Manually process every request"],answer:"Run code only when a file is uploaded",explain:"Serverless is useful for event-driven tasks such as file uploads, API requests, and scheduled jobs."}
+];
+navButtons.forEach(button=>button.addEventListener("click",()=>goToPanel(button.dataset.panel)));
+function goToPanel(id){panels.forEach(panel=>panel.classList.remove("active"));navButtons.forEach(button=>button.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelector(`nav button[data-panel="${id}"]`).classList.add("active");completed.add(id);updateProgress();if(id==="sort"&&!document.getElementById("cards").children.length)buildSortCards();if(id==="quiz")renderQuiz();window.scrollTo({top:0,behavior:"smooth"})}
+function updateProgress(){const percent=Math.round(completed.size/navButtons.length*100);document.getElementById("progressBar").style.width=percent+"%";document.getElementById("progressText").textContent=percent+"% complete"}
+function saveReflection(){reflection=document.getElementById("reflection").value.trim();const feedback=document.getElementById("reflectionFeedback");if(reflection.length>10){feedback.textContent="Reflection saved. Great event-driven thinking.";feedback.className="feedback good"}else{feedback.textContent="Try adding one more detail about an automatic task an app could perform.";feedback.className="feedback bad"}}
+function showArchitecture(type,el){document.querySelectorAll(".arch-btn").forEach(btn=>btn.classList.remove("selected"));el.classList.add("selected");const data={api:["Website Form Submission",["User submits form","API Gateway receives request","Lambda checks and processes form","DynamoDB stores the record","SNS sends confirmation"]],image:["Photo Upload Processor",["User uploads image to S3","S3 event triggers Lambda","Lambda resizes or analyzes image","S3 stores processed image","DynamoDB stores image details"]],queue:["Order Processing Queue",["App receives order","SQS stores message","Lambda processes message","DynamoDB updates order status","SNS sends notification"]],schedule:["Scheduled Reminder",["EventBridge schedule starts daily","Lambda checks reminder list","DynamoDB provides records","SNS or email sends reminders"]],workflow:["Multi-Step Approval",["Step Functions starts workflow","Lambda validates request","Reviewer approval step occurs","DynamoDB updates final status","SNS sends result"]]};
+const selected=data[type];document.getElementById("architectureOutput").innerHTML=`<h3>${selected[0]}</h3><div class="pipeline">${selected[1].map((s,i)=>`<div class="pipeline-step"><span>Step ${i+1}</span><span>${s}</span></div>`).join("")}</div>`}
+function buildSortCards(){const cards=document.getElementById("cards");cards.innerHTML="";shuffle(useCards).forEach((card,index)=>{const div=document.createElement("div");div.className="drag-card";div.draggable=true;div.tabIndex=0;div.id="card-"+index;div.dataset.type=card.type;div.textContent=card.name;div.addEventListener("dragstart",e=>e.dataTransfer.setData("text/plain",div.id));div.addEventListener("click",()=>{document.querySelectorAll(".drag-card").forEach(c=>c.style.outline="none");selectedCard=div;div.style.outline="3px solid var(--accent)"});cards.appendChild(div)});setupDropzones()}
+function setupDropzones(){document.querySelectorAll(".dropzone").forEach(zone=>{zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("over")});zone.addEventListener("dragleave",()=>zone.classList.remove("over"));zone.addEventListener("drop",e=>{e.preventDefault();zone.classList.remove("over");placeCard(document.getElementById(e.dataTransfer.getData("text/plain")),zone)});zone.addEventListener("click",()=>{if(selectedCard){placeCard(selectedCard,zone);selectedCard.style.outline="none";selectedCard=null}})})}
+function placeCard(card,zone){if(!card)return;const item=document.createElement("div");item.className="dropped";item.dataset.type=card.dataset.type;item.textContent=card.textContent;zone.appendChild(item);card.remove()}
+function checkSort(){let correct=0,total=0;document.querySelectorAll(".dropzone").forEach(zone=>{zone.querySelectorAll(".dropped").forEach(item=>{total++;if(item.dataset.type===zone.dataset.type)correct++})});sortScore=correct;const feedback=document.getElementById("sortFeedback");if(total<useCards.length){feedback.textContent=`You sorted ${total}/${useCards.length} cards. Sort all cards before checking.`;feedback.className="feedback bad"}else if(correct===useCards.length){feedback.textContent="Excellent! All serverless cards are sorted correctly.";feedback.className="feedback good"}else{feedback.textContent=`You got ${correct}/${useCards.length}. Review functions, event sources, and data/storage services, then try again.`;feedback.className="feedback bad"}}
+function resetSort(){document.querySelectorAll(".dropzone .dropped").forEach(item=>item.remove());buildSortCards();document.getElementById("sortFeedback").textContent="Cards reset. Try sorting again.";document.getElementById("sortFeedback").className="feedback"}
+function checkScenarios(){const answers={scenario1:"API Gateway + Lambda",scenario2:"S3 Event + Lambda",scenario3:"Amazon DynamoDB",scenario4:"Amazon SQS",scenario5:"AWS Step Functions"};scenarioScore=0;Object.keys(answers).forEach(id=>{if(document.getElementById(id).value===answers[id])scenarioScore++});const feedback=document.getElementById("scenarioFeedback");if(scenarioScore===5){feedback.textContent="Perfect! You matched each situation to a strong serverless design.";feedback.className="feedback good"}else{feedback.textContent=`You got ${scenarioScore}/5. Hint: web request = API Gateway + Lambda, upload = S3 event + Lambda, app data = DynamoDB, queue = SQS, workflow = Step Functions.`;feedback.className="feedback bad"}}
+function renderQuiz(){const quizBox=document.getElementById("quizBox");const q=quizQuestions[quizIndex];quizBox.innerHTML=`<div class="activity-card"><h3>Question ${quizIndex+1} of ${quizQuestions.length}</h3><p><strong>${q.question}</strong></p>${q.options.map(option=>`<button class="quiz-option" onclick="answerQuiz(this, '${option.replace(/'/g,"\\'")}')">${option}</button>`).join("")}</div>`;document.getElementById("quizFeedback").textContent="Answer the question to receive feedback.";document.getElementById("quizFeedback").className="feedback"}
+function answerQuiz(button,answer){const q=quizQuestions[quizIndex];document.querySelectorAll(".quiz-option").forEach(btn=>{btn.disabled=true;if(btn.textContent===q.answer)btn.classList.add("correct")});if(answer===q.answer){button.classList.add("correct");quizScore++;document.getElementById("quizFeedback").textContent="Correct! "+q.explain;document.getElementById("quizFeedback").className="feedback good"}else{button.classList.add("wrong");document.getElementById("quizFeedback").textContent="Not quite. "+q.explain;document.getElementById("quizFeedback").className="feedback bad"}}
+function nextQuiz(){if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuiz()}else{document.getElementById("quizFeedback").textContent=`Quiz complete! Your current score is ${quizScore}/${quizQuestions.length}.`;document.getElementById("quizFeedback").className=quizScore>=4?"feedback good":"feedback bad"}}
+function restartQuiz(){quizIndex=0;quizScore=0;renderQuiz()}
+function generateSummary(){const exitTicket=document.getElementById("exitTicket").value.trim();const summary=`My Serverless Computing Study Notes
+
+Main Idea:
+Serverless computing means developers do not manage servers directly. The cloud provider handles infrastructure, and code runs in response to events.
+
+Common AWS Serverless Services:
+AWS Lambda — runs code when triggered.
+Amazon API Gateway — receives API requests and can trigger Lambda.
+Amazon DynamoDB — serverless NoSQL database.
+Amazon S3 Events — trigger actions when files are uploaded.
+Amazon SQS — queues messages for reliable processing.
+Amazon SNS — sends notifications.
+Amazon EventBridge — routes events and schedules tasks.
+AWS Step Functions — coordinates multi-step workflows.
+
+How to Think About Serverless:
+Start with the event. Ask what happens first, what code should run, where data is stored, and what result should happen.
+
+My Reflection:
+${reflection||"No reflection saved yet."}
+
+Practice Scores:
+Sorting Activity: ${sortScore}/9
+Scenario Activity: ${scenarioScore}/5
+Quiz Score: ${quizScore}/5
+
+My Exit Ticket:
+${exitTicket||"Write your serverless explanation here."}`;document.getElementById("summaryOutput").textContent=summary;updateBadges()}
+function updateBadges(){const badges=["Serverless Beginner"];if(reflection.length>10)badges.push("Event Thinker");if(sortScore>=7)badges.push("Serverless Sorter");if(scenarioScore===5)badges.push("Architecture Solver");if(quizScore>=4)badges.push("Serverless Cloud Builder");document.getElementById("badgeBox").innerHTML=badges.map(badge=>`<span class="badge">${badge}</span>`).join("")}
+function shuffle(array){return[...array].sort(()=>Math.random()-.5)}
+showArchitecture("api",document.querySelector(".arch-btn"));updateProgress();
+</script>
+</body>
+</html>
