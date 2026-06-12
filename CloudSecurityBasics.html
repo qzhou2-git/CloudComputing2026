@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cloud Security Basics Interactive Lesson</title>
+<style>
+:root{--primary:#1e3a8a;--secondary:#2563eb;--accent:#f97316;--success:#16a34a;--danger:#dc2626;--bg:#f5f8ff;--card:#fff;--text:#1f2937;--muted:#64748b;--line:#dbeafe;--shadow:rgba(30,58,138,.15)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 32%),radial-gradient(circle at bottom right,rgba(249,115,22,.15),transparent 35%),var(--bg);line-height:1.55}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:2rem 1rem;text-align:center;position:relative;overflow:hidden}
+header:after{content:"🔐";position:absolute;right:7%;top:18%;font-size:7rem;opacity:.18;animation:floatIcon 4s ease-in-out infinite}
+@keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+header h1{margin:0;font-size:clamp(2rem,5vw,3.6rem)}
+header p{max-width:880px;margin:.75rem auto 0;font-size:1.1rem}
+main{width:min(1120px,94vw);margin:1.5rem auto 3rem}
+.layout{display:grid;grid-template-columns:285px 1fr;gap:1rem;align-items:start}
+nav{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:1rem;box-shadow:0 12px 30px var(--shadow);position:sticky;top:1rem}
+nav h2{margin:0 0 .75rem;font-size:1rem;color:var(--primary)}
+nav button{width:100%;margin:.3rem 0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:.75rem;text-align:left;font-weight:700;color:var(--text);cursor:pointer;transition:.2s}
+nav button:hover,nav button.active{background:#eff6ff;border-color:var(--secondary);transform:translateX(3px)}
+.progress-card{margin-top:1rem;padding:.9rem;border-radius:16px;background:#eff6ff;border:1px solid var(--line)}
+.meter{height:14px;background:#dbeafe;border-radius:999px;overflow:hidden;margin-top:.5rem}
+.meter div{height:100%;width:0%;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .35s}
+.panel{display:none;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:26px;padding:clamp(1rem,3vw,1.75rem);box-shadow:0 14px 35px var(--shadow);min-height:660px}
+.panel.active{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tag{display:inline-block;background:#dbeafe;color:var(--primary);border-radius:999px;padding:.35rem .75rem;font-weight:800;font-size:.9rem;margin-bottom:.75rem}
+h2,h3{color:var(--primary)}
+.hero-box,.callout,.activity-card,.concept-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1rem;margin:1rem 0;box-shadow:0 8px 18px rgba(30,58,138,.07)}
+.hero-box{background:linear-gradient(135deg,#eff6ff,#fff);border-left:8px solid var(--secondary)}
+.callout{background:#fff7ed;border-left:8px solid var(--accent)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.concept-card{min-height:220px}.concept-card .icon{font-size:2.8rem;display:block;margin-bottom:.5rem}
+.identity{border-top:8px solid #2563eb}.data{border-top:8px solid #16a34a}.network{border-top:8px solid #f97316}.monitor{border-top:8px solid #8b5cf6}.backup{border-top:8px solid #c8102e}.behavior{border-top:8px solid #facc15}
+button.primary,button.secondary{border:0;border-radius:14px;padding:.8rem 1rem;font:inherit;font-weight:800;cursor:pointer;transition:.2s}
+button.primary{background:linear-gradient(135deg,var(--secondary),var(--primary));color:white}
+button.secondary{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+button.primary:hover,button.secondary:hover{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
+.password-lab,.sort-board{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.score-list{display:grid;gap:.5rem;margin-top:.8rem}
+.score-item{padding:.65rem;border-radius:12px;background:#f8fafc;border:1px solid var(--line);font-weight:700}
+.score-item.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.score-item.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.cards,.dropzones{display:grid;gap:.7rem}
+.drag-card{background:white;border:2px solid var(--line);border-radius:14px;padding:.8rem;cursor:grab;font-weight:700;box-shadow:0 6px 14px rgba(30,58,138,.08)}
+.dropzones{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dropzone{min-height:250px;background:#f8fafc;border:2px dashed #93c5fd;border-radius:18px;padding:.8rem}
+.dropzone h3{margin-top:0;font-size:1.05rem}.dropzone.over{background:#eff6ff;border-color:var(--secondary)}
+.dropped{margin:.4rem 0;padding:.6rem;border-radius:12px;background:#fff;border:1px solid var(--line)}
+.scenario-grid{display:grid;gap:.85rem}.scenario{background:#fff;border:2px solid var(--line);border-radius:18px;padding:1rem}
+select,textarea,input[type=password]{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:.75rem;font:inherit;background:#fff;margin-top:.4rem}
+textarea{min-height:95px;resize:vertical}label{display:block;margin-top:.8rem;font-weight:800}
+.feedback{margin-top:.8rem;padding:.8rem;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-weight:700}
+.feedback.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.feedback.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.quiz-option{display:block;width:100%;text-align:left;margin:.5rem 0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;cursor:pointer;font-weight:700}
+.quiz-option.correct{border-color:var(--success);background:#ecfdf5}.quiz-option.wrong{border-color:var(--danger);background:#fef2f2}
+.badge{display:inline-block;padding:.45rem .7rem;border-radius:999px;background:#eff6ff;border:1px solid var(--line);margin:.25rem;font-weight:800;color:var(--primary)}
+.summary-output{white-space:pre-wrap;background:#f8fafc;border:1px dashed var(--secondary);border-radius:18px;padding:1rem;min-height:215px}
+footer{text-align:center;margin-top:2rem;color:var(--muted);font-weight:700}
+@media(max-width:950px){.layout,.grid-3,.grid-2,.password-lab,.sort-board,.dropzones{grid-template-columns:1fr}nav{position:static}header:after{display:none}}
+</style>
+</head>
+<body>
+<header>
+<h1>Cloud Security Basics</h1>
+<p>Interactive freshman lesson: learn how to protect cloud accounts, data, applications, and users through real-life examples, security checks, sorting practice, scenarios, and a quick quiz.</p>
+</header>
+<main>
+<div class="layout">
+<nav aria-label="Lesson navigation">
+<h2>Lesson Menu</h2>
+<button class="active" data-panel="welcome">1. Welcome</button>
+<button data-panel="concept">2. Big Idea</button>
+<button data-panel="pillars">3. Security Pillars</button>
+<button data-panel="password">4. Password & MFA Lab</button>
+<button data-panel="sort">5. Sort Security Actions</button>
+<button data-panel="scenario">6. Cloud Scenarios</button>
+<button data-panel="quiz">7. Knowledge Check</button>
+<button data-panel="wrap">8. Wrap-Up</button>
+<div class="progress-card"><strong>Progress</strong><div class="meter"><div id="progressBar"></div></div><p id="progressText">0% complete</p></div>
+</nav>
+<section>
+<article id="welcome" class="panel active">
+<span class="tag">Community College Cloud Computing</span>
+<h2>Welcome, Future Cloud Defenders!</h2>
+<div class="hero-box"><strong>Today’s goal:</strong> By the end of this lesson, you will be able to identify basic cloud security risks and choose practical actions to protect cloud accounts, data, and applications.</div>
+<p>Cloud security may sound advanced, but the basic idea is simple: protect the people, accounts, data, applications, and systems that use the cloud. Every cloud professional, even a beginner, needs security habits.</p>
+<div class="grid-3">
+<div class="concept-card identity"><span class="icon">👤</span><h3>Protect Identity</h3><p>Use strong passwords, multi-factor authentication, and least privilege access.</p></div>
+<div class="concept-card data"><span class="icon">🗂️</span><h3>Protect Data</h3><p>Control who can see data, avoid public exposure, and use encryption when appropriate.</p></div>
+<div class="concept-card monitor"><span class="icon">🔎</span><h3>Monitor Activity</h3><p>Watch for unusual behavior, review logs, and respond quickly to warning signs.</p></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('concept')">Start Lesson</button></div>
+</article>
+
+<article id="concept" class="panel">
+<span class="tag">Beginner Big Idea</span>
+<h2>Cloud Security Is a Set of Smart Habits</h2>
+<p>Cloud security means protecting cloud systems from unauthorized access, accidental mistakes, data exposure, service disruption, and misuse. Many cloud security problems happen because of simple mistakes, not because someone understands advanced hacking.</p>
+<div class="callout"><strong>Real-world application:</strong> A student club stores event sign-up information in the cloud. If the folder is shared publicly or the admin account uses a weak password, names and emails could be exposed. Cloud security helps prevent that.</div>
+<h3>Security Goal: CIA Triad</h3>
+<div class="grid-3">
+<div class="concept-card identity"><span class="icon">🔒</span><h3>Confidentiality</h3><p>Only the right people can access information.</p></div>
+<div class="concept-card data"><span class="icon">✅</span><h3>Integrity</h3><p>Information stays accurate and is not changed without permission.</p></div>
+<div class="concept-card network"><span class="icon">⚡</span><h3>Availability</h3><p>Systems and data are available when users need them.</p></div>
+</div>
+<div class="activity-card"><h3>Quick Reflection</h3><label for="reflection">Which cloud security habit do you already use in your daily life?</label><textarea id="reflection" placeholder="Example: I use two-factor authentication for email, or I check sharing settings before sending a file..."></textarea><div class="btn-row"><button class="primary" onclick="saveReflection()">Save Reflection</button></div><p id="reflectionFeedback" class="feedback">Your response will appear in your final summary.</p></div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('pillars')">Explore Security Pillars</button></div>
+</article>
+
+<article id="pillars" class="panel">
+<span class="tag">Core Content</span><h2>Six Beginner Cloud Security Pillars</h2>
+<div class="grid-3">
+<div class="concept-card identity"><span class="icon">👤</span><h3>Identity & Access</h3><p>Know who is signing in and what they are allowed to do.</p><p><strong>Examples:</strong> MFA, roles, permissions, least privilege.</p></div>
+<div class="concept-card data"><span class="icon">🗂️</span><h3>Data Protection</h3><p>Keep sensitive information private, accurate, and recoverable.</p><p><strong>Examples:</strong> Encryption, backups, access controls.</p></div>
+<div class="concept-card network"><span class="icon">🌐</span><h3>Network Security</h3><p>Control what traffic can reach cloud resources.</p><p><strong>Examples:</strong> Firewalls, security groups, private networks.</p></div>
+<div class="concept-card monitor"><span class="icon">🔎</span><h3>Monitoring</h3><p>Look for unusual activity and security warnings.</p><p><strong>Examples:</strong> Logs, alerts, audit trails.</p></div>
+<div class="concept-card backup"><span class="icon">💾</span><h3>Backup & Recovery</h3><p>Prepare for accidents, outages, or deleted data.</p><p><strong>Examples:</strong> Snapshots, versioning, recovery plans.</p></div>
+<div class="concept-card behavior"><span class="icon">🧠</span><h3>Safe Behavior</h3><p>Reduce risk caused by phishing, weak passwords, and careless sharing.</p><p><strong>Examples:</strong> Training, verification, secure habits.</p></div>
+</div>
+<div class="callout"><strong>Professor tip:</strong> Beginners often think cloud security is only about tools. In reality, cloud security is also about decisions: who gets access, what is shared, what is monitored, and how mistakes are handled.</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('password')">Try Password & MFA Lab</button></div>
+</article>
+
+<article id="password" class="panel">
+<span class="tag">Interactive Lab</span><h2>Password & MFA Safety Lab</h2>
+<p>Try typing a sample password idea. Do not use your real password. This lab checks basic password habits only.</p>
+<div class="password-lab">
+<div class="activity-card"><h3>Check a Sample Password</h3><label for="passwordInput">Sample password idea</label><input type="password" id="passwordInput" placeholder="Type a sample, not a real password" oninput="checkPassword()" /><div class="meter"><div id="passwordMeter"></div></div><p id="passwordFeedback" class="feedback">Start typing to check password strength habits.</p></div>
+<div class="activity-card"><h3>Security Habit Checklist</h3><div id="passwordChecks" class="score-list"><div class="score-item" id="lengthCheck">At least 12 characters</div><div class="score-item" id="upperCheck">Includes uppercase and lowercase letters</div><div class="score-item" id="numberCheck">Includes a number</div><div class="score-item" id="symbolCheck">Includes a symbol</div><div class="score-item" id="mfaCheck">MFA would make it safer</div></div></div>
+</div>
+<div class="callout"><strong>MFA means Multi-Factor Authentication.</strong> It requires something more than just a password, such as a code, authenticator app, or security key.</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('sort')">Sort Security Actions</button></div>
+</article>
+
+<article id="sort" class="panel">
+<span class="tag">Hands-On Practice</span><h2>Sort the Security Actions</h2>
+<p>Drag each card into the correct category. If drag-and-drop is difficult, click a card and then click a category box.</p>
+<div class="sort-board"><div><h3>Security Action Cards</h3><div id="cards" class="cards"></div></div><div class="dropzones"><div class="dropzone" data-type="Prevent" tabindex="0"><h3>🛡️ Prevent</h3><p>Reduce the chance of a problem.</p></div><div class="dropzone" data-type="Detect" tabindex="0"><h3>🔎 Detect</h3><p>Notice when something is wrong.</p></div><div class="dropzone" data-type="Recover" tabindex="0"><h3>💾 Recover</h3><p>Restore service or data after a problem.</p></div></div></div>
+<div class="btn-row"><button class="primary" onclick="checkSort()">Check Sorting</button><button class="secondary" onclick="resetSort()">Reset Cards</button></div><p id="sortFeedback" class="feedback">Sort the cards, then check your work.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('scenario')">Apply to Scenarios</button></div>
+</article>
+
+<article id="scenario" class="panel">
+<span class="tag">Real-World Decision Making</span><h2>Cloud Security Scenarios</h2><p>For each situation, choose the best first security action.</p>
+<div class="scenario-grid">
+<div class="scenario"><h3>Scenario 1: Shared Password</h3><p>A project team is sharing one cloud login because it feels convenient.</p><select id="scenario1"><option value="">Choose...</option><option value="Create individual accounts with least privilege">Create individual accounts with least privilege</option><option value="Turn off logging">Turn off logging</option><option value="Make the password shorter">Make the password shorter</option></select></div>
+<div class="scenario"><h3>Scenario 2: Public Data</h3><p>A student notices a storage folder with names and emails may be visible to everyone.</p><select id="scenario2"><option value="">Choose...</option><option value="Review permissions and remove public access">Review permissions and remove public access</option><option value="Ignore it because cloud storage is always safe">Ignore it because cloud storage is always safe</option><option value="Post the link online">Post the link online</option></select></div>
+<div class="scenario"><h3>Scenario 3: Suspicious Sign-In</h3><p>An account shows sign-ins from a location the student has never visited.</p><select id="scenario3"><option value="">Choose...</option><option value="Review logs, change password, and enable MFA">Review logs, change password, and enable MFA</option><option value="Delete all logs immediately">Delete all logs immediately</option><option value="Share the account with more people">Share the account with more people</option></select></div>
+<div class="scenario"><h3>Scenario 4: Deleted Project Files</h3><p>A student accidentally deletes important project files from cloud storage.</p><select id="scenario4"><option value="">Choose...</option><option value="Restore from backup or version history">Restore from backup or version history</option><option value="Disable backups next time">Disable backups next time</option><option value="Use the same weak password again">Use the same weak password again</option></select></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="checkScenarios()">Check Scenarios</button></div><p id="scenarioFeedback" class="feedback">Choose one action for each scenario.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('quiz')">Take Knowledge Check</button></div>
+</article>
+
+<article id="quiz" class="panel">
+<span class="tag">Knowledge Check</span><h2>Quick Quiz</h2><div id="quizBox"></div>
+<div class="btn-row"><button class="primary" onclick="nextQuiz()">Next Question</button><button class="secondary" onclick="restartQuiz()">Restart Quiz</button></div>
+<p id="quizFeedback" class="feedback">Answer the question to receive feedback.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('wrap')">Finish Lesson</button></div>
+</article>
+
+<article id="wrap" class="panel">
+<span class="tag">Wrap-Up</span><h2>Cloud Security Basics Summary</h2>
+<div class="activity-card"><h3>Badges Earned</h3><div id="badgeBox"><span class="badge">Cloud Security Beginner</span></div></div>
+<div class="activity-card"><h3>Your Personal Study Notes</h3><div id="summaryOutput" class="summary-output">Click the button below to generate your study summary.</div><div class="btn-row"><button class="primary" onclick="generateSummary()">Generate Summary</button><button class="secondary" onclick="window.print()">Print or Save as PDF</button></div></div>
+<div class="callout"><strong>Exit Ticket:</strong> In one sentence, explain one cloud security habit every beginner should practice.<label for="exitTicket">Your answer:</label><textarea id="exitTicket" placeholder="One cloud security habit every beginner should practice is..."></textarea></div>
+</article>
+</section></div>
+<footer>Interactive lesson for incoming cloud computing students · HTML5, CSS, and JavaScript</footer>
+</main>
+<script>
+const completed=new Set();let selectedCard=null,quizIndex=0,quizScore=0,reflection="",sortScore=0,scenarioScore=0,passwordScore=0;
+const panels=document.querySelectorAll(".panel"),navButtons=document.querySelectorAll("nav button");
+const securityCards=[{name:"Enable MFA on cloud accounts",type:"Prevent"},{name:"Use least privilege permissions",type:"Prevent"},{name:"Turn on encryption for sensitive data",type:"Prevent"},{name:"Review sign-in logs",type:"Detect"},{name:"Create alerts for unusual activity",type:"Detect"},{name:"Monitor failed login attempts",type:"Detect"},{name:"Restore files from backup",type:"Recover"},{name:"Use version history after accidental deletion",type:"Recover"},{name:"Follow an incident response plan",type:"Recover"}];
+const quizQuestions=[
+{question:"Which action best protects a cloud account from password-only attacks?",options:["Enable MFA","Use the same password everywhere","Turn off logs"],answer:"Enable MFA",explain:"MFA adds another verification step beyond the password."},
+{question:"What does least privilege mean?",options:["Give users only the access they need","Give everyone administrator access","Never use permissions"],answer:"Give users only the access they need",explain:"Least privilege reduces damage if an account is misused or compromised."},
+{question:"Which security goal means data should only be seen by authorized people?",options:["Confidentiality","Availability","Decoration"],answer:"Confidentiality",explain:"Confidentiality is about keeping information private."},
+{question:"Why are logs useful in cloud security?",options:["They help detect unusual activity","They make passwords shorter","They remove the need for backups"],answer:"They help detect unusual activity",explain:"Logs help teams investigate activity and identify warning signs."},
+{question:"What is a good recovery habit?",options:["Keep backups or version history","Delete all backup copies","Share one login with everyone"],answer:"Keep backups or version history",explain:"Backups and version history help recover from mistakes, outages, or data loss."}
+];
+navButtons.forEach(button=>button.addEventListener("click",()=>goToPanel(button.dataset.panel)));
+function goToPanel(id){panels.forEach(panel=>panel.classList.remove("active"));navButtons.forEach(button=>button.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelector(`nav button[data-panel="${id}"]`).classList.add("active");completed.add(id);updateProgress();if(id==="sort"&&!document.getElementById("cards").children.length)buildSortCards();if(id==="quiz")renderQuiz();window.scrollTo({top:0,behavior:"smooth"})}
+function updateProgress(){const percent=Math.round(completed.size/navButtons.length*100);document.getElementById("progressBar").style.width=percent+"%";document.getElementById("progressText").textContent=percent+"% complete"}
+function saveReflection(){reflection=document.getElementById("reflection").value.trim();const feedback=document.getElementById("reflectionFeedback");if(reflection.length>10){feedback.textContent="Reflection saved. Great connection to real cloud security habits.";feedback.className="feedback good"}else{feedback.textContent="Try adding one more detail about a security habit you already use or want to improve.";feedback.className="feedback bad"}}
+function checkPassword(){const value=document.getElementById("passwordInput").value;let score=0;const checks=[{id:"lengthCheck",test:value.length>=12},{id:"upperCheck",test:/[a-z]/.test(value)&&/[A-Z]/.test(value)},{id:"numberCheck",test:/[0-9]/.test(value)},{id:"symbolCheck",test:/[^A-Za-z0-9]/.test(value)},{id:"mfaCheck",test:value.length>0}];checks.forEach(check=>{const el=document.getElementById(check.id);el.classList.remove("good","bad");if(check.test){el.classList.add("good");score++}else{el.classList.add("bad")}});passwordScore=score;document.getElementById("passwordMeter").style.width=score/checks.length*100+"%";const feedback=document.getElementById("passwordFeedback");if(score>=5){feedback.textContent="Strong basic habits. Remember: MFA is still recommended even with a strong password.";feedback.className="feedback good"}else if(score>=3){feedback.textContent="Getting better. Try making it longer and more varied.";feedback.className="feedback"}else{feedback.textContent="Weak sample. Avoid short, simple, or reused passwords.";feedback.className="feedback bad"}}
+function buildSortCards(){const cards=document.getElementById("cards");cards.innerHTML="";shuffle(securityCards).forEach((card,index)=>{const div=document.createElement("div");div.className="drag-card";div.draggable=true;div.tabIndex=0;div.id="card-"+index;div.dataset.type=card.type;div.textContent=card.name;div.addEventListener("dragstart",e=>e.dataTransfer.setData("text/plain",div.id));div.addEventListener("click",()=>{document.querySelectorAll(".drag-card").forEach(c=>c.style.outline="none");selectedCard=div;div.style.outline="3px solid var(--accent)"});cards.appendChild(div)});setupDropzones()}
+function setupDropzones(){document.querySelectorAll(".dropzone").forEach(zone=>{zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("over")});zone.addEventListener("dragleave",()=>zone.classList.remove("over"));zone.addEventListener("drop",e=>{e.preventDefault();zone.classList.remove("over");placeCard(document.getElementById(e.dataTransfer.getData("text/plain")),zone)});zone.addEventListener("click",()=>{if(selectedCard){placeCard(selectedCard,zone);selectedCard.style.outline="none";selectedCard=null}})})}
+function placeCard(card,zone){if(!card)return;const item=document.createElement("div");item.className="dropped";item.dataset.type=card.dataset.type;item.textContent=card.textContent;zone.appendChild(item);card.remove()}
+function checkSort(){let correct=0,total=0;document.querySelectorAll(".dropzone").forEach(zone=>{zone.querySelectorAll(".dropped").forEach(item=>{total++;if(item.dataset.type===zone.dataset.type)correct++})});sortScore=correct;const feedback=document.getElementById("sortFeedback");if(total<securityCards.length){feedback.textContent=`You sorted ${total}/${securityCards.length} cards. Sort all cards before checking.`;feedback.className="feedback bad"}else if(correct===securityCards.length){feedback.textContent="Excellent! All security actions are sorted correctly.";feedback.className="feedback good"}else{feedback.textContent=`You got ${correct}/${securityCards.length}. Review prevent, detect, and recover actions, then try again.`;feedback.className="feedback bad"}}
+function resetSort(){document.querySelectorAll(".dropzone .dropped").forEach(item=>item.remove());buildSortCards();document.getElementById("sortFeedback").textContent="Cards reset. Try sorting again.";document.getElementById("sortFeedback").className="feedback"}
+function checkScenarios(){const answers={scenario1:"Create individual accounts with least privilege",scenario2:"Review permissions and remove public access",scenario3:"Review logs, change password, and enable MFA",scenario4:"Restore from backup or version history"};scenarioScore=0;Object.keys(answers).forEach(id=>{if(document.getElementById(id).value===answers[id])scenarioScore++});const feedback=document.getElementById("scenarioFeedback");if(scenarioScore===4){feedback.textContent="Perfect! You chose safe and practical cloud security actions.";feedback.className="feedback good"}else{feedback.textContent=`You got ${scenarioScore}/4. Hint: avoid shared accounts, remove public access, investigate suspicious sign-ins, and restore deleted files from backups.`;feedback.className="feedback bad"}}
+function renderQuiz(){const quizBox=document.getElementById("quizBox");const q=quizQuestions[quizIndex];quizBox.innerHTML=`<div class="activity-card"><h3>Question ${quizIndex+1} of ${quizQuestions.length}</h3><p><strong>${q.question}</strong></p>${q.options.map(option=>`<button class="quiz-option" onclick="answerQuiz(this, '${option.replace(/'/g,"\'")}')">${option}</button>`).join("")}</div>`;document.getElementById("quizFeedback").textContent="Answer the question to receive feedback.";document.getElementById("quizFeedback").className="feedback"}
+function answerQuiz(button,answer){const q=quizQuestions[quizIndex];document.querySelectorAll(".quiz-option").forEach(btn=>{btn.disabled=true;if(btn.textContent===q.answer)btn.classList.add("correct")});if(answer===q.answer){button.classList.add("correct");quizScore++;document.getElementById("quizFeedback").textContent="Correct! "+q.explain;document.getElementById("quizFeedback").className="feedback good"}else{button.classList.add("wrong");document.getElementById("quizFeedback").textContent="Not quite. "+q.explain;document.getElementById("quizFeedback").className="feedback bad"}}
+function nextQuiz(){if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuiz()}else{document.getElementById("quizFeedback").textContent=`Quiz complete! Your current score is ${quizScore}/${quizQuestions.length}.`;document.getElementById("quizFeedback").className=quizScore>=4?"feedback good":"feedback bad"}}
+function restartQuiz(){quizIndex=0;quizScore=0;renderQuiz()}
+function generateSummary(){const exitTicket=document.getElementById("exitTicket").value.trim();const summary=`My Cloud Security Basics Study Notes
+
+Main Idea:
+Cloud security means protecting cloud accounts, data, applications, networks, and users from mistakes, misuse, and unauthorized access.
+
+Three Security Goals:
+Confidentiality — only authorized people can access information.
+Integrity — information stays accurate and is not changed without permission.
+Availability — systems and data are available when users need them.
+
+Beginner Security Habits:
+Use MFA.
+Use strong, unique passwords.
+Follow least privilege.
+Check sharing permissions.
+Protect sensitive data.
+Review logs and alerts.
+Keep backups or version history.
+
+My Reflection:
+${reflection||"No reflection saved yet."}
+
+Practice Scores:
+Password Habit Score: ${passwordScore}/5
+Sorting Activity: ${sortScore}/9
+Scenario Activity: ${scenarioScore}/4
+Quiz Score: ${quizScore}/5
+
+My Exit Ticket:
+${exitTicket||"Write your one-sentence security habit here."}`;document.getElementById("summaryOutput").textContent=summary;updateBadges()}
+function updateBadges(){const badges=["Cloud Security Beginner"];if(reflection.length>10)badges.push("Reflective Learner");if(passwordScore>=4)badges.push("Password Protector");if(sortScore>=7)badges.push("Security Sorter");if(scenarioScore===4)badges.push("Scenario Solver");if(quizScore>=4)badges.push("Cloud Security Champ");document.getElementById("badgeBox").innerHTML=badges.map(badge=>`<span class="badge">${badge}</span>`).join("")}
+function shuffle(array){return[...array].sort(()=>Math.random()-.5)}
+updateProgress();
+</script>
+</body>
+</html>
