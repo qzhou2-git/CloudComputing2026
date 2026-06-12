@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IaaS, PaaS, SaaS Interactive Cloud Lesson</title>
+<style>
+:root{
+  --primary:#1e3a8a;--secondary:#2563eb;--accent:#f97316;--success:#16a34a;
+  --danger:#dc2626;--bg:#f5f8ff;--card:#fff;--text:#1f2937;--muted:#64748b;
+  --line:#dbeafe;--shadow:rgba(30,58,138,.15)
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 32%),radial-gradient(circle at bottom right,rgba(249,115,22,.15),transparent 35%),var(--bg);line-height:1.55}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:2rem 1rem;text-align:center;position:relative;overflow:hidden}
+header:after{content:"☁️";position:absolute;right:7%;top:18%;font-size:7rem;opacity:.18;animation:floatCloud 4s ease-in-out infinite}
+@keyframes floatCloud{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+header h1{margin:0;font-size:clamp(2rem,5vw,3.6rem)}
+header p{max-width:850px;margin:.75rem auto 0;font-size:1.1rem}
+main{width:min(1120px,94vw);margin:1.5rem auto 3rem}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:1rem;align-items:start}
+nav{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:1rem;box-shadow:0 12px 30px var(--shadow);position:sticky;top:1rem}
+nav h2{margin:0 0 .75rem;font-size:1rem;color:var(--primary)}
+nav button{width:100%;margin:.3rem 0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:.75rem;text-align:left;font-weight:700;color:var(--text);cursor:pointer;transition:.2s}
+nav button:hover,nav button.active{background:#eff6ff;border-color:var(--secondary);transform:translateX(3px)}
+.progress-card{margin-top:1rem;padding:.9rem;border-radius:16px;background:#eff6ff;border:1px solid var(--line)}
+.meter{height:14px;background:#dbeafe;border-radius:999px;overflow:hidden;margin-top:.5rem}
+.meter div{height:100%;width:0%;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .35s}
+.panel{display:none;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:26px;padding:clamp(1rem,3vw,1.75rem);box-shadow:0 14px 35px var(--shadow);min-height:650px}
+.panel.active{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tag{display:inline-block;background:#dbeafe;color:var(--primary);border-radius:999px;padding:.35rem .75rem;font-weight:800;font-size:.9rem;margin-bottom:.75rem}
+h2,h3{color:var(--primary)}
+.hero-box,.callout,.activity-card,.model-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1rem;margin:1rem 0;box-shadow:0 8px 18px rgba(30,58,138,.07)}
+.hero-box{background:linear-gradient(135deg,#eff6ff,#fff);border-left:8px solid var(--secondary)}
+.callout{background:#fff7ed;border-left:8px solid var(--accent)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.model-card{min-height:240px}.model-card .icon{font-size:2.8rem;display:block;margin-bottom:.5rem}
+.iaas{border-top:8px solid #2563eb}.paas{border-top:8px solid #f97316}.saas{border-top:8px solid #16a34a}
+button.primary,button.secondary,button.small{border:0;border-radius:14px;padding:.8rem 1rem;font:inherit;font-weight:800;cursor:pointer;transition:.2s}
+button.primary{background:linear-gradient(135deg,var(--secondary),var(--primary));color:white}
+button.secondary{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+button.small{padding:.5rem .7rem;background:#eff6ff;color:var(--primary);border:1px solid var(--line)}
+button.primary:hover,button.secondary:hover,button.small:hover{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
+.analogy-stage,.sort-board{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.restaurant{background:#f8fafc;border-radius:20px;padding:1rem;border:1px solid var(--line)}
+.stack{display:grid;gap:.4rem;margin-top:1rem}
+.layer{padding:.75rem;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;font-weight:700}
+.layer.customer{background:#fff7ed;border-color:#fed7aa}.layer.provider{background:#ecfdf5;border-color:#bbf7d0}
+.cards,.dropzones{display:grid;gap:.7rem}
+.drag-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:.8rem;cursor:grab;font-weight:700;box-shadow:0 6px 14px rgba(30,58,138,.08)}
+.dropzone{min-height:115px;background:#f8fafc;border:2px dashed #93c5fd;border-radius:18px;padding:.8rem}
+.dropzone h3{margin-top:0;font-size:1.05rem}.dropzone.over{background:#eff6ff;border-color:var(--secondary)}
+.dropped{margin:.4rem 0;padding:.6rem;border-radius:12px;background:#fff;border:1px solid var(--line)}
+.scenario-grid{display:grid;gap:.85rem}.scenario{background:#fff;border:2px solid var(--line);border-radius:18px;padding:1rem}
+select,textarea,input[type=text]{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:.75rem;font:inherit;background:#fff;margin-top:.4rem}
+textarea{min-height:95px;resize:vertical}label{display:block;margin-top:.8rem;font-weight:800}
+.feedback{margin-top:.8rem;padding:.8rem;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-weight:700}
+.feedback.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.feedback.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+.quiz-option{display:block;width:100%;text-align:left;margin:.5rem 0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;cursor:pointer;font-weight:700}
+.quiz-option.correct{border-color:var(--success);background:#ecfdf5}.quiz-option.wrong{border-color:var(--danger);background:#fef2f2}
+.badge{display:inline-block;padding:.45rem .7rem;border-radius:999px;background:#eff6ff;border:1px solid var(--line);margin:.25rem;font-weight:800;color:var(--primary)}
+.summary-output{white-space:pre-wrap;background:#f8fafc;border:1px dashed var(--secondary);border-radius:18px;padding:1rem;min-height:190px}
+.compare-table{width:100%;border-collapse:collapse;margin-top:1rem;overflow:hidden;border-radius:16px}
+.compare-table th,.compare-table td{border:1px solid var(--line);padding:.75rem;text-align:left;vertical-align:top}
+.compare-table th{background:#eff6ff;color:var(--primary)}
+footer{text-align:center;margin-top:2rem;color:var(--muted);font-weight:700}
+@media(max-width:900px){.layout,.grid-3,.analogy-stage,.sort-board{grid-template-columns:1fr}nav{position:static}header:after{display:none}}
+</style>
+</head>
+<body>
+<header>
+<h1>Cloud Service Models</h1>
+<p>Interactive freshman lesson: IaaS, PaaS, and SaaS explained with real-life analogies, cloud examples, sorting practice, scenarios, and a quick quiz.</p>
+</header>
+<main>
+<div class="layout">
+<nav aria-label="Lesson navigation">
+<h2>Lesson Menu</h2>
+<button class="active" data-panel="welcome">1. Welcome</button>
+<button data-panel="concept">2. Big Idea</button>
+<button data-panel="models">3. IaaS/PaaS/SaaS</button>
+<button data-panel="analogy">4. Pizza Analogy</button>
+<button data-panel="sort">5. Sort Services</button>
+<button data-panel="scenario">6. Choose a Model</button>
+<button data-panel="quiz">7. Knowledge Check</button>
+<button data-panel="wrap">8. Wrap-Up</button>
+<div class="progress-card"><strong>Progress</strong><div class="meter"><div id="progressBar"></div></div><p id="progressText">0% complete</p></div>
+</nav>
+<section>
+<article id="welcome" class="panel active">
+<span class="tag">Community College Cloud Computing</span>
+<h2>Welcome, Future Cloud Professionals!</h2>
+<div class="hero-box"><strong>Today’s goal:</strong> By the end of this lesson, you will be able to explain the difference between IaaS, PaaS, and SaaS using beginner-friendly examples.</div>
+<p>Imagine you want to launch an online business, create a student club website, build a mobile app, or use online tools for school. You have choices: build everything yourself, use a platform that handles part of the work, or simply use a finished application.</p>
+<div class="grid-3">
+<div class="model-card iaas"><span class="icon">🧱</span><h3>IaaS</h3><p><strong>Infrastructure as a Service</strong></p><p>You rent computing building blocks such as servers, storage, and networks.</p></div>
+<div class="model-card paas"><span class="icon">🛠️</span><h3>PaaS</h3><p><strong>Platform as a Service</strong></p><p>You deploy your code while the platform manages many technical details.</p></div>
+<div class="model-card saas"><span class="icon">📱</span><h3>SaaS</h3><p><strong>Software as a Service</strong></p><p>You use a complete app through a browser or phone.</p></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('concept')">Start Lesson</button></div>
+</article>
+<article id="concept" class="panel">
+<span class="tag">Beginner Big Idea</span>
+<h2>Cloud Computing Is Like Renting Instead of Buying</h2>
+<p>Cloud computing means using technology resources over the internet. Instead of owning all the hardware and software yourself, you use resources from a cloud provider when you need them.</p>
+<div class="callout"><strong>Real-world application:</strong> A new student club wants to launch a website for event sign-ups. The club has no server room, no full-time IT staff, and only a small budget. Cloud services let them start quickly without buying expensive equipment.</div>
+<h3>What changes between IaaS, PaaS, and SaaS?</h3>
+<table class="compare-table"><thead><tr><th>Model</th><th>You Manage</th><th>Provider Manages</th><th>Best When...</th></tr></thead><tbody>
+<tr><td><strong>IaaS</strong></td><td>Operating system, apps, data, settings</td><td>Servers, storage, networking, data center</td><td>You need control and customization.</td></tr>
+<tr><td><strong>PaaS</strong></td><td>Your code, data, app design</td><td>Servers, runtime, scaling, operating system</td><td>You want to focus on building and deploying apps.</td></tr>
+<tr><td><strong>SaaS</strong></td><td>Your account, files, settings, usage</td><td>The entire application and infrastructure</td><td>You just need to use software immediately.</td></tr>
+</tbody></table>
+<div class="btn-row"><button class="primary" onclick="goToPanel('models')">Explore the Models</button></div>
+</article>
+<article id="models" class="panel">
+<span class="tag">Core Content</span><h2>Meet the Three Cloud Service Models</h2>
+<div class="grid-3">
+<div class="model-card iaas"><span class="icon">🧱</span><h3>IaaS</h3><p><strong>Think:</strong> “I rent the computer parts.”</p><p>You rent virtual machines, storage, and networks. You still manage the operating system and applications.</p><p><strong>Examples:</strong> Amazon EC2, Azure Virtual Machines, Google Compute Engine.</p></div>
+<div class="model-card paas"><span class="icon">🛠️</span><h3>PaaS</h3><p><strong>Think:</strong> “I bring my code.”</p><p>You upload your application. The platform handles servers, updates, scaling, and runtime environment.</p><p><strong>Examples:</strong> AWS Elastic Beanstalk, Azure App Service, Google App Engine, Heroku.</p></div>
+<div class="model-card saas"><span class="icon">📱</span><h3>SaaS</h3><p><strong>Think:</strong> “I use the app.”</p><p>You log in and use a finished product. You do not manage servers, platforms, or code.</p><p><strong>Examples:</strong> Gmail, Microsoft 365, Google Docs, Canvas, Zoom.</p></div>
+</div>
+<div class="activity-card"><h3>Quick Reflection</h3><label for="reflection">Which service model do you think you use most often as a student? Why?</label><textarea id="reflection" placeholder="Example: I use SaaS most often because I use Canvas, Gmail, and Google Docs..."></textarea><div class="btn-row"><button class="primary" onclick="saveReflection()">Save Reflection</button></div><p id="reflectionFeedback" class="feedback">Your response will appear in your final summary.</p></div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('analogy')">Try the Pizza Analogy</button></div>
+</article>
+<article id="analogy" class="panel">
+<span class="tag">Interactive Analogy</span><h2>The Pizza Analogy</h2>
+<p>Cloud service models are often compared to pizza. The more the provider handles, the less you have to manage.</p>
+<div class="analogy-stage"><div class="restaurant"><h3>Choose a Pizza Style</h3><label for="pizzaChoice">Select one:</label><select id="pizzaChoice" onchange="updatePizzaAnalogy()"><option value="home">Make pizza at home</option><option value="iaas">Rent a kitchen</option><option value="paas">Use a prepared pizza kit</option><option value="saas">Order delivery</option></select><div id="pizzaExplanation" class="feedback"></div></div><div class="restaurant"><h3>Responsibility Stack</h3><div id="pizzaStack" class="stack"></div></div></div>
+<div class="callout"><strong>Cloud connection:</strong> IaaS gives you many ingredients and tools, PaaS gives you a ready platform to build on, and SaaS gives you the finished product.</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('sort')">Sort Real Services</button></div>
+</article>
+<article id="sort" class="panel">
+<span class="tag">Hands-On Practice</span><h2>Sort the Cloud Services</h2>
+<p>Drag each service into the correct category. If drag-and-drop is difficult, click a card and then click a category box.</p>
+<div class="sort-board"><div><h3>Service Cards</h3><div id="cards" class="cards"></div></div><div class="dropzones"><div class="dropzone" data-type="IaaS" tabindex="0"><h3>🧱 IaaS</h3><p>Infrastructure building blocks</p></div><div class="dropzone" data-type="PaaS" tabindex="0"><h3>🛠️ PaaS</h3><p>Platform for deploying code</p></div><div class="dropzone" data-type="SaaS" tabindex="0"><h3>📱 SaaS</h3><p>Finished software application</p></div></div></div>
+<div class="btn-row"><button class="primary" onclick="checkSort()">Check Sorting</button><button class="secondary" onclick="resetSort()">Reset Cards</button></div><p id="sortFeedback" class="feedback">Sort the cards, then check your work.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('scenario')">Apply to Scenarios</button></div>
+</article>
+<article id="scenario" class="panel">
+<span class="tag">Real-World Decision Making</span><h2>Choose the Best Cloud Model</h2><p>For each situation, choose the cloud service model that best fits the need.</p>
+<div class="scenario-grid">
+<div class="scenario"><h3>Scenario 1: Student Club Website</h3><p>Your club has simple website code and wants to publish it quickly without managing servers.</p><select id="scenario1"><option value="">Choose...</option><option value="IaaS">IaaS</option><option value="PaaS">PaaS</option><option value="SaaS">SaaS</option></select></div>
+<div class="scenario"><h3>Scenario 2: Online Class Tool</h3><p>Your instructor uses Canvas so students can submit assignments, take quizzes, and check grades.</p><select id="scenario2"><option value="">Choose...</option><option value="IaaS">IaaS</option><option value="PaaS">PaaS</option><option value="SaaS">SaaS</option></select></div>
+<div class="scenario"><h3>Scenario 3: Custom Lab Server</h3><p>A cloud computing class needs virtual machines where students can configure operating systems and install software.</p><select id="scenario3"><option value="">Choose...</option><option value="IaaS">IaaS</option><option value="PaaS">PaaS</option><option value="SaaS">SaaS</option></select></div>
+</div>
+<div class="btn-row"><button class="primary" onclick="checkScenarios()">Check Scenarios</button></div><p id="scenarioFeedback" class="feedback">Choose a model for each scenario.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('quiz')">Take Knowledge Check</button></div>
+</article>
+<article id="quiz" class="panel">
+<span class="tag">Knowledge Check</span><h2>Quick Quiz</h2><div id="quizBox"></div>
+<div class="btn-row"><button class="primary" onclick="nextQuiz()">Next Question</button><button class="secondary" onclick="restartQuiz()">Restart Quiz</button></div>
+<p id="quizFeedback" class="feedback">Answer the question to receive feedback.</p>
+<div class="btn-row"><button class="primary" onclick="goToPanel('wrap')">Finish Lesson</button></div>
+</article>
+<article id="wrap" class="panel">
+<span class="tag">Wrap-Up</span><h2>Cloud Service Model Summary</h2>
+<div class="activity-card"><h3>Badges Earned</h3><div id="badgeBox"><span class="badge">Cloud Beginner</span></div></div>
+<div class="activity-card"><h3>Your Personal Study Notes</h3><div id="summaryOutput" class="summary-output">Click the button below to generate your study summary.</div><div class="btn-row"><button class="primary" onclick="generateSummary()">Generate Summary</button><button class="secondary" onclick="window.print()">Print or Save as PDF</button></div></div>
+<div class="callout"><strong>Exit Ticket:</strong> In one sentence, explain the difference between IaaS, PaaS, and SaaS to someone who has never studied cloud computing.<label for="exitTicket">Your answer:</label><textarea id="exitTicket" placeholder="IaaS is..., PaaS is..., and SaaS is..."></textarea></div>
+</article>
+</section></div>
+<footer>Interactive lesson for incoming cloud computing students · HTML5, CSS, and JavaScript</footer>
+</main>
+<script>
+const completed=new Set();let selectedCard=null,quizIndex=0,quizScore=0,reflection="",sortScore=0,scenarioScore=0;
+const panels=document.querySelectorAll(".panel"),navButtons=document.querySelectorAll("nav button");
+const serviceCards=[{name:"Amazon EC2 Virtual Machine",type:"IaaS"},{name:"Azure Virtual Machines",type:"IaaS"},{name:"Google Compute Engine",type:"IaaS"},{name:"AWS Elastic Beanstalk",type:"PaaS"},{name:"Azure App Service",type:"PaaS"},{name:"Heroku",type:"PaaS"},{name:"Gmail",type:"SaaS"},{name:"Canvas LMS",type:"SaaS"},{name:"Microsoft 365",type:"SaaS"}];
+const quizQuestions=[
+{question:"Which model gives you virtual machines, storage, and networking, but you manage the operating system and applications?",options:["IaaS","PaaS","SaaS"],answer:"IaaS",explain:"IaaS gives you infrastructure building blocks such as virtual machines and storage."},
+{question:"Which model is best if a developer wants to upload code without managing servers?",options:["IaaS","PaaS","SaaS"],answer:"PaaS",explain:"PaaS lets developers focus on code while the platform manages much of the environment."},
+{question:"Which model are you using when you log in to Canvas, Gmail, or Microsoft 365?",options:["IaaS","PaaS","SaaS"],answer:"SaaS",explain:"SaaS is complete software delivered over the internet."},
+{question:"Which model usually gives the customer the most technical control?",options:["IaaS","PaaS","SaaS"],answer:"IaaS",explain:"IaaS gives more control, but also more responsibility."},
+{question:"Which model usually requires the least setup from the user?",options:["IaaS","PaaS","SaaS"],answer:"SaaS",explain:"With SaaS, users typically just sign in and use the application."}
+];
+navButtons.forEach(button=>button.addEventListener("click",()=>goToPanel(button.dataset.panel)));
+function goToPanel(id){panels.forEach(p=>p.classList.remove("active"));navButtons.forEach(b=>b.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelector(`nav button[data-panel="${id}"]`).classList.add("active");completed.add(id);updateProgress();if(id==="sort"&&!document.getElementById("cards").children.length)buildSortCards();if(id==="quiz")renderQuiz();window.scrollTo({top:0,behavior:"smooth"})}
+function updateProgress(){const percent=Math.round(completed.size/navButtons.length*100);document.getElementById("progressBar").style.width=percent+"%";document.getElementById("progressText").textContent=percent+"% complete"}
+function saveReflection(){reflection=document.getElementById("reflection").value.trim();const f=document.getElementById("reflectionFeedback");if(reflection.length>10){f.textContent="Reflection saved. Great connection to your own experience.";f.className="feedback good"}else{f.textContent="Try adding one more detail about how you use cloud software.";f.className="feedback bad"}}
+function updatePizzaAnalogy(){const choice=document.getElementById("pizzaChoice").value,explanation=document.getElementById("pizzaExplanation"),stack=document.getElementById("pizzaStack");const data={home:{text:"Making pizza at home is like traditional IT. You manage almost everything.",layers:[["You manage","Dough, sauce, toppings, oven, dishes, cleanup"],["Provider manages","Almost nothing"]]},iaas:{text:"Renting a kitchen is like IaaS. The kitchen exists, but you still cook and manage the recipe.",layers:[["You manage","Operating system, applications, data, settings"],["Provider manages","Servers, storage, networking, data center"]]},paas:{text:"Using a prepared pizza kit is like PaaS. Many hard parts are ready, and you focus on finishing your creation.",layers:[["You manage","Your code, your data, your app design"],["Provider manages","Servers, operating system, runtime, scaling"]]},saas:{text:"Ordering delivery is like SaaS. You receive the finished product and just use it.",layers:[["You manage","Your account, files, preferences"],["Provider manages","Application, platform, servers, updates, security infrastructure"]]}};explanation.textContent=data[choice].text;explanation.className="feedback good";stack.innerHTML=data[choice].layers.map(layer=>`<div class="layer ${layer[0]==="You manage"?"customer":"provider"}"><strong>${layer[0]}:</strong> ${layer[1]}</div>`).join("")}
+function buildSortCards(){const cards=document.getElementById("cards");cards.innerHTML="";shuffle(serviceCards).forEach((card,index)=>{const div=document.createElement("div");div.className="drag-card";div.draggable=true;div.id="card-"+index;div.dataset.type=card.type;div.textContent=card.name;div.addEventListener("dragstart",e=>e.dataTransfer.setData("text/plain",div.id));div.addEventListener("click",()=>{document.querySelectorAll(".drag-card").forEach(c=>c.style.outline="none");selectedCard=div;div.style.outline="3px solid var(--accent)"});cards.appendChild(div)});setupDropzones()}
+function setupDropzones(){document.querySelectorAll(".dropzone").forEach(zone=>{zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("over")});zone.addEventListener("dragleave",()=>zone.classList.remove("over"));zone.addEventListener("drop",e=>{e.preventDefault();zone.classList.remove("over");placeCard(document.getElementById(e.dataTransfer.getData("text/plain")),zone)});zone.addEventListener("click",()=>{if(selectedCard){placeCard(selectedCard,zone);selectedCard.style.outline="none";selectedCard=null}})})}
+function placeCard(card,zone){if(!card)return;const item=document.createElement("div");item.className="dropped";item.dataset.type=card.dataset.type;item.textContent=card.textContent;zone.appendChild(item);card.remove()}
+function checkSort(){let correct=0,total=0;document.querySelectorAll(".dropzone").forEach(zone=>{zone.querySelectorAll(".dropped").forEach(item=>{total++;if(item.dataset.type===zone.dataset.type)correct++})});sortScore=correct;const f=document.getElementById("sortFeedback");if(total<serviceCards.length){f.textContent=`You sorted ${total}/${serviceCards.length} cards. Sort all cards before checking.`;f.className="feedback bad"}else if(correct===serviceCards.length){f.textContent="Excellent! All services are sorted correctly.";f.className="feedback good"}else{f.textContent=`You got ${correct}/${serviceCards.length}. Review the examples and try again.`;f.className="feedback bad"}}
+function resetSort(){document.querySelectorAll(".dropzone .dropped").forEach(item=>item.remove());buildSortCards();document.getElementById("sortFeedback").textContent="Cards reset. Try sorting again.";document.getElementById("sortFeedback").className="feedback"}
+function checkScenarios(){const answers={scenario1:"PaaS",scenario2:"SaaS",scenario3:"IaaS"};scenarioScore=0;Object.keys(answers).forEach(id=>{if(document.getElementById(id).value===answers[id])scenarioScore++});const f=document.getElementById("scenarioFeedback");if(scenarioScore===3){f.textContent="Perfect! You matched each situation to the best model.";f.className="feedback good"}else{f.textContent=`You got ${scenarioScore}/3. Hint: website code without servers = PaaS; Canvas = SaaS; custom virtual machines = IaaS.`;f.className="feedback bad"}}
+function renderQuiz(){const q=quizQuestions[quizIndex];document.getElementById("quizBox").innerHTML=`<div class="activity-card"><h3>Question ${quizIndex+1} of ${quizQuestions.length}</h3><p><strong>${q.question}</strong></p>${q.options.map(o=>`<button class="quiz-option" onclick="answerQuiz(this,'${o}')">${o}</button>`).join("")}</div>`;document.getElementById("quizFeedback").textContent="Answer the question to receive feedback.";document.getElementById("quizFeedback").className="feedback"}
+function answerQuiz(button,answer){const q=quizQuestions[quizIndex],options=document.querySelectorAll(".quiz-option");options.forEach(btn=>{btn.disabled=true;if(btn.textContent===q.answer)btn.classList.add("correct")});if(answer===q.answer){button.classList.add("correct");quizScore++;document.getElementById("quizFeedback").textContent="Correct! "+q.explain;document.getElementById("quizFeedback").className="feedback good"}else{button.classList.add("wrong");document.getElementById("quizFeedback").textContent="Not quite. "+q.explain;document.getElementById("quizFeedback").className="feedback bad"}}
+function nextQuiz(){if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuiz()}else{document.getElementById("quizFeedback").textContent=`Quiz complete! Your current score is ${quizScore}/${quizQuestions.length}.`;document.getElementById("quizFeedback").className=quizScore>=4?"feedback good":"feedback bad"}}
+function restartQuiz(){quizIndex=0;quizScore=0;renderQuiz()}
+function generateSummary(){const exitTicket=document.getElementById("exitTicket").value.trim();const summary=`My Cloud Service Models Study Notes
+
+IaaS — Infrastructure as a Service:
+IaaS means renting cloud infrastructure such as virtual machines, storage, and networking. The customer has more control, but also manages more.
+
+PaaS — Platform as a Service:
+PaaS means using a cloud platform to deploy applications. The customer focuses mostly on code and data while the provider manages servers, operating systems, runtime, and scaling.
+
+SaaS — Software as a Service:
+SaaS means using finished software over the internet. The customer mainly manages their account, files, and settings.
+
+My Reflection:
+${reflection||"No reflection saved yet."}
+
+Practice Scores:
+Sorting Activity: ${sortScore}/9
+Scenario Activity: ${scenarioScore}/3
+Quiz Score: ${quizScore}/5
+
+My Exit Ticket:
+${exitTicket||"Write your one-sentence explanation here."}`;document.getElementById("summaryOutput").textContent=summary;updateBadges()}
+function updateBadges(){const badges=["Cloud Beginner"];if(reflection.length>10)badges.push("Reflective Learner");if(sortScore>=7)badges.push("Service Sorter");if(scenarioScore===3)badges.push("Scenario Solver");if(quizScore>=4)badges.push("Cloud Model Champ");document.getElementById("badgeBox").innerHTML=badges.map(b=>`<span class="badge">${b}</span>`).join("")}
+function shuffle(array){return[...array].sort(()=>Math.random()-.5)}
+updatePizzaAnalogy();updateProgress();
+</script>
+</body>
+</html>
