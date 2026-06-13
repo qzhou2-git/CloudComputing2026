@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cloud Computing Readiness Assessment</title>
+<style>
+:root{--primary:#1e3a8a;--secondary:#2563eb;--accent:#f97316;--success:#16a34a;--danger:#dc2626;--warning:#f59e0b;--bg:#f5f8ff;--card:#fff;--text:#1f2937;--muted:#64748b;--line:#dbeafe;--shadow:rgba(30,58,138,.15)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 32%),radial-gradient(circle at bottom right,rgba(249,115,22,.15),transparent 35%),var(--bg);line-height:1.55}
+header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:2.25rem 1rem;text-align:center;position:relative;overflow:hidden}
+header:after{content:"☁";position:absolute;right:7%;top:8%;font-size:8rem;opacity:.14;animation:floatIcon 4s ease-in-out infinite}
+@keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+header h1{margin:0;font-size:clamp(2rem,5vw,3.4rem)}
+header p{max-width:920px;margin:.75rem auto 0;font-size:1.1rem}
+main{width:min(1120px,94vw);margin:1.5rem auto 3rem}.layout{display:grid;grid-template-columns:285px 1fr;gap:1rem;align-items:start}
+nav{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:1rem;box-shadow:0 12px 30px var(--shadow);position:sticky;top:1rem}
+nav h2{margin:0 0 .75rem;font-size:1rem;color:var(--primary)}nav button{width:100%;margin:.3rem 0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:.75rem;text-align:left;font-weight:700;color:var(--text);cursor:pointer;transition:.2s}nav button:hover,nav button.active{background:#eff6ff;border-color:var(--secondary);transform:translateX(3px)}
+.progress-card{margin-top:1rem;padding:.9rem;border-radius:16px;background:#eff6ff;border:1px solid var(--line)}.meter{height:14px;background:#dbeafe;border-radius:999px;overflow:hidden;margin-top:.5rem}.meter div{height:100%;width:0%;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .35s}.small-note{font-size:.9rem;color:var(--muted)}
+.panel{display:none;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:26px;padding:clamp(1rem,3vw,1.75rem);box-shadow:0 14px 35px var(--shadow);min-height:660px}.panel.active{display:block;animation:fadeIn .25s}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tag{display:inline-block;background:#dbeafe;color:var(--primary);border-radius:999px;padding:.35rem .75rem;font-weight:800;font-size:.9rem;margin-bottom:.75rem}h2,h3{color:var(--primary)}
+.hero-box,.callout,.activity-card,.concept-card,.result-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1rem;margin:1rem 0;box-shadow:0 8px 18px rgba(30,58,138,.07)}.hero-box{background:linear-gradient(135deg,#eff6ff,#fff);border-left:8px solid var(--secondary)}.callout{background:#fff7ed;border-left:8px solid var(--accent)}.success-box{background:#ecfdf5;border-left:8px solid var(--success)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.concept-card{min-height:190px}.concept-card .icon{font-size:2.5rem;display:block;margin-bottom:.5rem}.foundation{border-top:8px solid #2563eb}.applied{border-top:8px solid #f97316}.advising{border-top:8px solid #16a34a}
+button.primary,button.secondary{border:0;border-radius:14px;padding:.8rem 1rem;font:inherit;font-weight:800;cursor:pointer;transition:.2s}button.primary{background:linear-gradient(135deg,var(--secondary),var(--primary));color:white}button.secondary{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}button.primary:hover,button.secondary:hover{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow)}.btn-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
+.question-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:1.2rem;margin-top:1rem;box-shadow:0 10px 24px rgba(30,58,138,.09)}.question-meta{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;color:var(--muted);font-weight:800}.option{display:block;width:100%;text-align:left;margin:.55rem 0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:.9rem;cursor:pointer;font-weight:700}.option:hover{background:#eff6ff;border-color:#93c5fd}.option.selected{background:#eff6ff;border-color:var(--secondary)}.option.correct{background:#ecfdf5;border-color:var(--success)}.option.wrong{background:#fef2f2;border-color:var(--danger)}.feedback{margin-top:.8rem;padding:.8rem;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-weight:700}.feedback.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.feedback.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}.feedback.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+.score-big{font-size:clamp(2.8rem,7vw,5rem);font-weight:900;color:var(--primary);text-align:center}.pill{display:inline-block;padding:.45rem .75rem;border-radius:999px;background:#eff6ff;border:1px solid var(--line);margin:.25rem;font-weight:800;color:var(--primary)}.summary-output{white-space:pre-wrap;background:#f8fafc;border:1px dashed var(--secondary);border-radius:18px;padding:1rem;min-height:180px}.review-item{border-left:6px solid var(--line);padding:1rem;background:#fff;border-radius:14px;margin:1rem 0}.review-item.correct{border-left-color:var(--success)}.review-item.wrong{border-left-color:var(--danger)}footer{text-align:center;margin-top:2rem;color:var(--muted);font-weight:700}
+@media(max-width:950px){.layout,.grid-3,.grid-2{grid-template-columns:1fr}nav{position:static}header:after{display:none}.question-meta{display:block}}
+</style>
+</head>
+<body>
+<header>
+<h1>Cloud Computing Readiness Assessment</h1>
+<p>An advisory self-check for incoming BAT Cloud Computing transfer students from related non-cloud AAS programs.</p>
+</header>
+<main>
+<div class="layout">
+<nav aria-label="Assessment navigation">
+<h2>Assessment Menu</h2>
+<button class="active" data-panel="welcome">1. Welcome</button>
+<button data-panel="assessment">2. Assessment</button>
+<button data-panel="results">3. Results</button>
+<button data-panel="review">4. Answer Review</button>
+<button data-panel="reflection">5. Reflection</button>
+<div class="progress-card"><strong>Progress</strong><div class="meter"><div id="progressBar"></div></div><p id="progressText">0% complete</p><p class="small-note">Progress is based on visited sections.</p></div>
+</nav>
+<section>
+<article id="welcome" class="panel active">
+<span class="tag">BAT Cloud Computing Transfer Readiness</span>
+<h2>Welcome</h2>
+<div class="hero-box"><strong>Purpose:</strong> This assessment is designed to help transfer students reflect on their current cloud computing knowledge before deciding whether optional foundational cloud courses may be useful.</div>
+<p>This is not a placement exam, credit evaluation, or official advising decision. Students who fully transfer from a related AAS program should follow official degree plans, transfer evaluations, and advisor guidance.</p>
+<div class="grid-3">
+<div class="concept-card foundation"><span class="icon">☁️</span><h3>24 Foundation Questions</h3><p>Cloud concepts, AWS basics, security, networking, storage, compute, databases, monitoring, and pricing.</p></div>
+<div class="concept-card applied"><span class="icon">🏗️</span><h3>6 Applied Questions</h3><p>Architecture choices, troubleshooting, high availability, security scenarios, cost awareness, and serverless thinking.</p></div>
+<div class="concept-card advising"><span class="icon">🧭</span><h3>Advisory Feedback</h3><p>Results provide reflection guidance rather than a decision about whether any optional course is required.</p></div>
+</div>
+<div class="callout"><strong>Suggested use:</strong> Complete the assessment, review explanations, and use the results as a conversation starter with a faculty advisor or program contact.</div>
+<div class="btn-row"><button class="primary" onclick="startAssessment()">Start Assessment</button><button class="secondary" onclick="goToPanel('reflection')">View Reflection Guide</button></div>
+</article>
+
+<article id="assessment" class="panel">
+<span class="tag" id="questionTag">Question 1 of 30</span>
+<h2>Cloud Knowledge Self-Check</h2>
+<div class="question-card">
+<div class="question-meta"><span id="questionCategory">Category</span><span id="questionDifficulty">Foundation</span></div>
+<h3 id="questionText">Question text</h3>
+<div id="optionsBox"></div>
+<div id="questionFeedback" class="feedback">Choose the best answer, then move to the next question.</div>
+<div class="btn-row"><button class="secondary" onclick="previousQuestion()">Previous</button><button class="primary" onclick="nextQuestion()" id="nextBtn">Next</button><button class="secondary" onclick="goToPanel('results')">View Results</button></div>
+</div>
+</article>
+
+<article id="results" class="panel">
+<span class="tag">Assessment Results</span>
+<h2>Your Readiness Snapshot</h2>
+<div class="result-card">
+<div class="score-big"><span id="scoreTotal">0</span>/30</div>
+<p class="feedback" id="scoreMessage">Complete the assessment to view your readiness snapshot.</p>
+</div>
+<div class="grid-2">
+<div class="result-card"><h3>Foundation Questions</h3><p class="score-big" style="font-size:3rem"><span id="foundationScore">0</span>/24</p><p>Cloud concepts and AWS foundational knowledge.</p></div>
+<div class="result-card"><h3>Applied Questions</h3><p class="score-big" style="font-size:3rem"><span id="appliedScore">0</span>/6</p><p>Scenario-based and slightly more challenging cloud questions.</p></div>
+</div>
+<div class="callout"><strong>Important:</strong> These results do not determine whether ITNW 2473, ITNW 2474, or ITNW 2475 is required. For students with a full related AAS transfer into the BAT program, these courses may not be required. Use this feedback only as a self-reflection tool when considering whether optional foundational review would support your confidence and success.</div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('review')">Review Answers</button><button class="secondary" onclick="window.print()">Print or Save Results</button><button class="secondary" onclick="restartAssessment()">Restart</button></div>
+</article>
+
+<article id="review" class="panel">
+<span class="tag">Answer Key & Explanations</span>
+<h2>Review Your Answers</h2>
+<p>Use this section to identify strengths and topics for additional review.</p>
+<div id="reviewBox"></div>
+<div class="btn-row"><button class="primary" onclick="goToPanel('reflection')">Continue to Reflection</button></div>
+</article>
+
+<article id="reflection" class="panel">
+<span class="tag">Next-Step Reflection</span>
+<h2>Reflection Guide</h2>
+<div class="hero-box"><strong>How to use your results:</strong> Think about your confidence, prior coursework, hands-on experience, and career goals. The assessment is intended to support informed conversations, not make a decision for you.</div>
+<div class="grid-3">
+<div class="concept-card foundation"><h3>Higher Readiness</h3><p>You may already have a strong foundation. Consider whether you want extra AWS hands-on practice or prefer to focus on upper-level BAT coursework.</p></div>
+<div class="concept-card applied"><h3>Developing Readiness</h3><p>You may understand many concepts but benefit from targeted review in selected areas such as networking, security, or AWS core services.</p></div>
+<div class="concept-card advising"><h3>Emerging Readiness</h3><p>You may want to explore additional learning resources, tutorials, or optional coursework to build confidence before advanced cloud courses.</p></div>
+</div>
+<div class="activity-card"><h3>Questions to Consider</h3><ul><li>Do I feel comfortable explaining core cloud concepts without looking them up?</li><li>Have I completed hands-on labs using AWS or another cloud platform?</li><li>Do I understand cloud security responsibilities, networking basics, and cost awareness?</li><li>Would optional review help me feel more confident in upper-level BAT cloud courses?</li><li>Should I discuss my results with a faculty advisor or program contact?</li></ul></div>
+<div class="activity-card"><h3>Personal Notes</h3><textarea id="notes" style="width:100%;min-height:120px;border:1px solid #cbd5e1;border-radius:12px;padding:.8rem;font:inherit" placeholder="Write topics you want to review or questions for an advisor..."></textarea><div class="btn-row"><button class="primary" onclick="generateSummary()">Generate Summary</button></div></div>
+<div class="activity-card"><h3>Your Summary</h3><div id="summaryOutput" class="summary-output">Complete the assessment and click Generate Summary.</div></div>
+</article>
+</section>
+</div>
+<footer>Advisory self-check for transfer students · HTML5, CSS, and JavaScript</footer>
+</main>
+<script>
+const completed=new Set(['welcome']);let currentQuestion=0;const answers=Array(30).fill(null);
+const questions=[
+{cat:'Foundation',topic:'Cloud Concepts',q:'What is the main idea of cloud computing?',opts:['Buying physical servers for every application','Using computing resources over the internet on demand','Installing all software only on a local laptop','Avoiding networks completely'],ans:1,exp:'Cloud computing provides on-demand access to resources such as compute, storage, databases, and applications over the internet.'},
+{cat:'Foundation',topic:'Cloud Benefits',q:'Which benefit best describes elasticity in cloud computing?',opts:['Resources can automatically scale up or down based on demand','Data is always stored on one local computer','Users must buy servers before using them','All applications must run without internet access'],ans:0,exp:'Elasticity means resources can expand or shrink as workload demand changes.'},
+{cat:'Foundation',topic:'Cloud Service Models',q:'Which cloud service model gives customers the most control over operating systems and virtual machines?',opts:['SaaS','PaaS','IaaS','DaaS'],ans:2,exp:'Infrastructure as a Service (IaaS) provides virtualized compute, storage, and networking while customers manage more of the operating system and application stack.'},
+{cat:'Foundation',topic:'Cloud Service Models',q:'Which option is the best example of Software as a Service (SaaS)?',opts:['A managed email service accessed through a browser','A blank virtual machine','A raw storage volume','A network firewall rule only'],ans:0,exp:'SaaS provides a complete application that users access without managing the underlying infrastructure.'},
+{cat:'Foundation',topic:'AWS Global Infrastructure',q:'In AWS, what is a Region?',opts:['A physical server inside a classroom','A geographic area containing multiple Availability Zones','A single hard drive in a data center','A password policy for an account'],ans:1,exp:'An AWS Region is a geographic area with multiple isolated Availability Zones.'},
+{cat:'Foundation',topic:'AWS Global Infrastructure',q:'Why do cloud architects use multiple Availability Zones?',opts:['To increase fault tolerance and availability','To avoid using encryption','To make all resources public','To eliminate the need for backups'],ans:0,exp:'Multiple Availability Zones help applications remain available if one zone experiences a problem.'},
+{cat:'Foundation',topic:'Shared Responsibility',q:'In the shared responsibility model, AWS is generally responsible for:',opts:['Managing customer application code','Security of the cloud infrastructure','Choosing each customer password','Configuring every customer database table'],ans:1,exp:'AWS is responsible for security of the cloud, including the physical data centers and global infrastructure.'},
+{cat:'Foundation',topic:'Shared Responsibility',q:'In the shared responsibility model, the customer is generally responsible for:',opts:['Physical security of AWS data centers','Managing the AWS global network backbone','Configuring access permissions for their users and data','Manufacturing AWS servers'],ans:2,exp:'Customers are responsible for security in the cloud, including IAM permissions, data classification, and many service configurations.'},
+{cat:'Foundation',topic:'Compute',q:'Which AWS service provides resizable virtual servers?',opts:['Amazon EC2','Amazon S3','Amazon Route 53','Amazon SNS'],ans:0,exp:'Amazon EC2 provides virtual machines called instances.'},
+{cat:'Foundation',topic:'Serverless',q:'Which AWS service runs code without requiring you to manage servers?',opts:['AWS Lambda','Amazon Route 53','AWS IAM','Amazon VPC only'],ans:0,exp:'AWS Lambda runs functions in response to events while AWS manages the underlying servers.'},
+{cat:'Foundation',topic:'Storage',q:'Which AWS service is commonly used for object storage such as images, documents, and static website files?',opts:['Amazon S3','Amazon EC2','Amazon VPC','AWS Organizations'],ans:0,exp:'Amazon S3 is object storage used for files, backups, data lakes, and static website assets.'},
+{cat:'Foundation',topic:'Databases',q:'Which service is a serverless NoSQL database on AWS?',opts:['Amazon DynamoDB','Amazon EC2','Amazon CloudFront','AWS CloudTrail'],ans:0,exp:'Amazon DynamoDB is a fully managed, serverless NoSQL database service.'},
+{cat:'Foundation',topic:'Networking',q:'What is the purpose of Amazon VPC?',opts:['To create an isolated virtual network in AWS','To store videos only','To send text messages to subscribers','To translate text between languages'],ans:0,exp:'Amazon VPC lets customers define logically isolated networks for AWS resources.'},
+{cat:'Foundation',topic:'Networking',q:'Which service helps route users to domain names such as example.com?',opts:['Amazon Route 53','Amazon DynamoDB','AWS Lambda','Amazon SQS'],ans:0,exp:'Amazon Route 53 is AWS DNS service and can route domain names to cloud resources.'},
+{cat:'Foundation',topic:'Content Delivery',q:'Which AWS service caches content at edge locations to improve performance for users?',opts:['Amazon CloudFront','Amazon RDS','AWS IAM','Amazon Comprehend'],ans:0,exp:'Amazon CloudFront is a content delivery network (CDN) that caches content closer to users.'},
+{cat:'Foundation',topic:'Security',q:'Which AWS service is used to manage users, groups, roles, and permissions?',opts:['AWS IAM','Amazon S3 Glacier','Amazon Polly','Amazon CloudWatch Logs'],ans:0,exp:'AWS Identity and Access Management (IAM) manages access to AWS services and resources.'},
+{cat:'Foundation',topic:'Security',q:'What is a best practice for securing an AWS account?',opts:['Use the root account for daily work','Enable multi-factor authentication (MFA)','Share one password with the whole team','Make all S3 buckets public'],ans:1,exp:'MFA adds an additional layer of protection to AWS accounts and privileged users.'},
+{cat:'Foundation',topic:'Monitoring',q:'Which service is commonly used for monitoring metrics and logs in AWS?',opts:['Amazon CloudWatch','Amazon Route 53','Amazon S3 only','AWS Artifact'],ans:0,exp:'Amazon CloudWatch collects metrics, logs, alarms, and operational data.'},
+{cat:'Foundation',topic:'Pricing',q:'Which pricing idea is commonly associated with cloud computing?',opts:['Pay only for resources used or provisioned','Always pay for a full data center upfront','Cloud services are always free','Pricing never changes based on usage'],ans:0,exp:'Cloud pricing is often usage-based, although exact charges depend on service configuration and consumption.'},
+{cat:'Foundation',topic:'High Availability',q:'What does high availability mean?',opts:['A system is designed to remain accessible with minimal downtime','A system uses only one server','A system does not need monitoring','A system avoids backups'],ans:0,exp:'High availability means designing systems to stay operational even when components fail.'},
+{cat:'Foundation',topic:'Backup and Recovery',q:'Why are backups important in cloud environments?',opts:['They help recover from accidental deletion, corruption, or failures','They remove the need for security','They make passwords unnecessary','They stop all costs'],ans:0,exp:'Backups support recovery from mistakes, failures, or data loss scenarios.'},
+{cat:'Foundation',topic:'Least Privilege',q:'What does least privilege mean?',opts:['Give users only the permissions they need to perform their tasks','Give every user administrator access','Avoid using IAM roles','Store passwords in code'],ans:0,exp:'Least privilege reduces risk by limiting permissions to what is necessary.'},
+{cat:'Foundation',topic:'Cloud Careers',q:'Which skill is useful for many cloud computing roles?',opts:['Understanding networking, security, and automation basics','Avoiding documentation','Never testing changes','Only using one local computer'],ans:0,exp:'Cloud roles often require a mix of networking, security, automation, troubleshooting, and service knowledge.'},
+{cat:'Foundation',topic:'AWS Certification',q:'Which AWS certification is commonly considered a beginner-friendly starting point?',opts:['AWS Certified Cloud Practitioner','AWS Certified Security - Specialty only','AWS Certified Machine Learning - Specialty only','No certification can help beginners'],ans:0,exp:'AWS Certified Cloud Practitioner is commonly used as an introductory certification for broad AWS cloud concepts.'},
+{cat:'Applied',topic:'Architecture',q:'A public website needs secure HTTPS, global content delivery, and static file hosting. Which combination is most appropriate?',opts:['S3, CloudFront, Route 53, and ACM','Only DynamoDB','Only IAM users','Only a local laptop'],ans:0,exp:'S3 can store static files, CloudFront delivers them globally, Route 53 handles DNS, and ACM provides TLS certificates.'},
+{cat:'Applied',topic:'Serverless Design',q:'A website form should submit data and run backend code without managing servers. Which pattern fits best?',opts:['API Gateway + Lambda','Route 53 + IAM only','S3 Glacier only','CloudFront only'],ans:0,exp:'API Gateway can receive web requests and Lambda can process the backend logic without server management.'},
+{cat:'Applied',topic:'Cost Awareness',q:'A student accidentally leaves a large cloud resource running. What is one practical way to reduce risk?',opts:['Set up AWS Budgets and monitor usage','Ignore billing alerts','Use only the root account','Disable all logs'],ans:0,exp:'Budgets and monitoring help identify unexpected spending early.'},
+{cat:'Applied',topic:'Security Scenario',q:'A team member needs temporary access to update a Lambda function but should not manage billing. What principle should guide permissions?',opts:['Least privilege','Full administrator access for everyone','Public access','No authentication'],ans:0,exp:'Least privilege means granting only the permissions required for the task.'},
+{cat:'Applied',topic:'Troubleshooting',q:'A static website loads HTML but not CSS. What is a likely cause?',opts:['The CSS file path is wrong or the file was not uploaded','The domain name is too short','IAM always blocks CSS files','Cloud computing cannot serve CSS'],ans:0,exp:'Missing or incorrect asset paths are common causes when CSS, images, or scripts do not load.'},
+{cat:'Applied',topic:'High Availability',q:'A cloud application must continue working if one data center location has trouble. What design choice helps?',opts:['Deploy across multiple Availability Zones','Use a single instance with no backups','Disable monitoring','Store all data only on a desktop'],ans:0,exp:'Using multiple Availability Zones improves resilience if one zone has an issue.'}
+];
+const panels=document.querySelectorAll('.panel'),navButtons=document.querySelectorAll('nav button');
+navButtons.forEach(button=>button.addEventListener('click',()=>goToPanel(button.dataset.panel)));
+function goToPanel(id){panels.forEach(p=>p.classList.remove('active'));navButtons.forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelector(`nav button[data-panel="${id}"]`).classList.add('active');completed.add(id);updateProgress();if(id==='assessment')renderQuestion();if(id==='results')renderResults();if(id==='review')renderReview();window.scrollTo({top:0,behavior:'smooth'});}
+function updateProgress(){const percent=Math.round(completed.size/navButtons.length*100);document.getElementById('progressBar').style.width=percent+'%';document.getElementById('progressText').textContent=percent+'% complete'}
+function startAssessment(){currentQuestion=0;goToPanel('assessment');renderQuestion();}
+function renderQuestion(){const item=questions[currentQuestion];document.getElementById('questionTag').textContent=`Question ${currentQuestion+1} of ${questions.length}`;document.getElementById('questionCategory').textContent=item.topic;document.getElementById('questionDifficulty').textContent=item.cat;document.getElementById('questionText').textContent=item.q;const box=document.getElementById('optionsBox');box.innerHTML='';item.opts.forEach((opt,i)=>{const btn=document.createElement('button');btn.className='option';btn.textContent=String.fromCharCode(65+i)+'. '+opt;btn.onclick=()=>selectAnswer(i);if(answers[currentQuestion]===i)btn.classList.add('selected');box.appendChild(btn)});document.getElementById('questionFeedback').textContent=answers[currentQuestion]===null?'Choose the best answer, then move to the next question.':'Answer saved. You may change it or continue.';document.getElementById('questionFeedback').className='feedback';document.getElementById('nextBtn').textContent=currentQuestion===questions.length-1?'Finish':'Next'}
+function selectAnswer(i){answers[currentQuestion]=i;renderQuestion();}
+function nextQuestion(){if(currentQuestion<questions.length-1){currentQuestion++;renderQuestion()}else{goToPanel('results')}}
+function previousQuestion(){if(currentQuestion>0){currentQuestion--;renderQuestion()}}
+function calculateScores(){let total=0,foundation=0,applied=0;questions.forEach((q,i)=>{if(answers[i]===q.ans){total++;if(q.cat==='Foundation')foundation++;else applied++;}});return{total,foundation,applied,answered:answers.filter(a=>a!==null).length}}
+function renderResults(){const s=calculateScores();document.getElementById('scoreTotal').textContent=s.total;document.getElementById('foundationScore').textContent=s.foundation;document.getElementById('appliedScore').textContent=s.applied;const msg=document.getElementById('scoreMessage');if(s.answered<30){msg.textContent=`You have answered ${s.answered}/30 questions. Complete all questions for the most useful readiness snapshot.`;msg.className='feedback warn';return}if(s.total>=26){msg.textContent='Readiness snapshot: You demonstrate strong current preparation in cloud foundations. You may use the answer review to identify any specific topics for optional review or additional hands-on practice.';msg.className='feedback good'}else if(s.total>=20){msg.textContent='Readiness snapshot: You demonstrate developing preparation. Consider reviewing selected foundation topics and using your results to guide an advising or faculty conversation.';msg.className='feedback warn'}else{msg.textContent='Readiness snapshot: You may benefit from additional foundation review and hands-on practice before or during upper-level cloud coursework. Use the explanations to identify priority topics.';msg.className='feedback bad'}}
+function renderReview(){const box=document.getElementById('reviewBox');box.innerHTML='';questions.forEach((q,i)=>{const div=document.createElement('div');const correct=answers[i]===q.ans;div.className='review-item '+(correct?'correct':'wrong');const your=answers[i]===null?'Not answered':q.opts[answers[i]];div.innerHTML=`<h3>Question ${i+1}: ${q.topic} <span class="pill">${q.cat}</span></h3><p><strong>${q.q}</strong></p><p><strong>Your answer:</strong> ${your}</p><p><strong>Correct answer:</strong> ${q.opts[q.ans]}</p><p><strong>Explanation:</strong> ${q.exp}</p>`;box.appendChild(div)})}
+function restartAssessment(){for(let i=0;i<answers.length;i++)answers[i]=null;currentQuestion=0;goToPanel('assessment')}
+function generateSummary(){const s=calculateScores();const notes=document.getElementById('notes').value.trim();const summary=`Cloud Computing Readiness Assessment Summary\n\nScore: ${s.total}/30\nFoundation Questions: ${s.foundation}/24\nApplied Questions: ${s.applied}/6\nAnswered: ${s.answered}/30\n\nAdvisory Note:\nThis assessment does not determine whether ITNW 2473, ITNW 2474, or ITNW 2475 is required. It is intended to support self-reflection and advising conversations for transfer students.\n\nMy Notes:\n${notes||'No notes entered yet.'}\n\nSuggested Next Step:\nReview the answer explanations and identify topics where additional cloud foundation practice may increase confidence.`;document.getElementById('summaryOutput').textContent=summary}
+updateProgress();renderQuestion();
+</script>
+</body>
+</html>
