@@ -40,11 +40,42 @@ button.secondary{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
 button.primary:hover,button.secondary:hover{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow)}
 .btn-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1rem}
 .architect{display:grid;grid-template-columns:1fr 1.2fr;gap:1rem}
+  #architectureOutput h3{
+  margin-top:0;
+  font-size:1.35rem;
+  line-height:1.3;
+}
+
+@media(max-width:950px){
+  .pipeline-step{
+    grid-template-columns:1fr;
+    gap:.25rem;
+  }
+}
 .arch-buttons{display:grid;gap:.7rem}
 .arch-btn{background:#fff;border:2px solid var(--line);border-radius:14px;padding:.85rem;text-align:left;font-weight:800;cursor:pointer}
 .arch-btn.selected,.arch-btn:hover{background:#eff6ff;border-color:var(--secondary)}
 .pipeline{display:grid;gap:.5rem;margin-top:1rem}
-.pipeline-step{padding:.8rem;border-radius:14px;background:#eff6ff;border:1px solid #bfdbfe;font-weight:800;display:flex;justify-content:space-between;gap:1rem}
+.pipeline-step{
+  padding:.9rem 1rem;
+  border-radius:14px;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  font-weight:800;
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:1rem;
+  align-items:start;
+}
+
+.pipeline-step span:first-child{
+  color:var(--primary);
+  white-space:nowrap;
+}
+
+.pipeline-step span:last-child{
+  line-height:1.45;
+}
 .sort-board{display:grid;grid-template-columns:1fr 1.35fr;gap:1rem}
 .cards,.dropzones{display:grid;gap:.7rem}
 .drag-card{background:white;border:2px solid var(--line);border-radius:14px;padding:.8rem;cursor:grab;font-weight:700;box-shadow:0 6px 14px rgba(30,58,138,.08)}
